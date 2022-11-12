@@ -19,7 +19,6 @@ export const App = () => {
   useEffect(() => {
     callService<Services, 'GetLanguage'>('GetLanguage', null).then(
       (language) => {
-        console.log('language', language)
         i18n.setLocal(language)
         navigate(
           APP_ARGS?.file

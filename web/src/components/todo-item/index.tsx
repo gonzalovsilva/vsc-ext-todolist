@@ -1,12 +1,18 @@
-import { Tooltip } from 'antd'
+import { message, Tooltip } from 'antd'
 import Typography from 'antd/lib/typography'
 import React, { useMemo, useState } from 'react'
+import ClipboardJS from 'clipboard'
 
 import { globalState } from '@/state'
-import { LinkOutlined, QuestionCircleOutlined } from '@ant-design/icons'
+import {
+  LinkOutlined,
+  QuestionCircleOutlined,
+  CopyOutlined,
+} from '@ant-design/icons'
 import { callService, isInVscode } from '@saber2pr/vscode-webview'
 
 import type { ITodoItem, Services } from '../../../../src/api/type'
+import { i18n } from '@/i18n'
 const { Text } = Typography
 
 export interface TodoItemProps {
@@ -24,7 +30,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
   nodeKey,
 }) => {
   const [editing, setEditing] = useState(
-    nodeKey === globalState.latestCreateKey,
+    nodeKey === globalState.latestCreateKey
   )
 
   const Tip = useMemo(() => {
@@ -35,10 +41,26 @@ export const TodoItem: React.FC<TodoItemProps> = ({
     return <></>
   }, [todo?.tip])
 
+  const Copy = useMemo(() => {
+    if (todo?.done) {
+      return (
+        <CopyOutlined
+          style={{ marginLeft: 4, cursor: 'pointer' }}
+          onClick={() => {
+            ClipboardJS.copy(todo?.content)
+            message.success(i18n.format('copy_content_success'))
+          }}
+        />
+      )
+    }
+    return <></>
+  }, [todo?.done])
+
   let content: string | JSX.Element = (
     <>
       {todo.content}
       {Tip}
+      {Copy}
     </>
   )
   if (editing) {
@@ -59,6 +81,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
             {todo.content}
             {LinkIcon}
             {Tip}
+            {Copy}
           </a>
         )
       } else {
@@ -73,6 +96,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
             {todo.content}
             {LinkIcon}
             {Tip}
+            {Copy}
           </a>
         )
       }
@@ -106,7 +130,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
                 globalState.blockKeyboard = false
                 globalState.latestCreateKey = null
               },
-              onChange: (value) => {
+              onChange: value => {
                 globalState.blockKeyboard = false
                 globalState.latestCreateKey = null
                 if (todo.content !== value) {
