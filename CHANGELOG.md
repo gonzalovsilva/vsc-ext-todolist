@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.41 (2022-11-12)
+
+
+### Features
+
+* done copyable ([5ecc26e](https://github.com/Saber2pr/vsc-ext-todolist/commit/5ecc26e4d82dd9e388f6ac471cec93ef549ca698))
+* menu ops refact ([9951a09](https://github.com/Saber2pr/vsc-ext-todolist/commit/9951a09714127f2349f22532e0bc8b90e9676549))
+* todo timerange set ([a11388a](https://github.com/Saber2pr/vsc-ext-todolist/commit/a11388a5c4bb61df687bb733c688bd202cae4977))
+
 ### [0.1.40](https://github.com/Saber2pr/vsc-ext-todolist/compare/v0.1.39...v0.1.40) (2022-08-14)
 
 
