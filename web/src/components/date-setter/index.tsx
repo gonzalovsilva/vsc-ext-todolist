@@ -1,23 +1,13 @@
 import { Button, Space } from 'antd'
 import moment from 'moment'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 
-import { FieldTimeOutlined } from '@ant-design/icons'
-
-import { useInputTimeRangeModal } from './input-time-range'
+import { parseTimeRange, useInputTimeRangeModal } from './input-time-range'
 
 export interface DateSetterProps {
   title: string
   date: string // start,end
   onChange(date: string): void
-}
-
-const parseTimeRange = (date: string): [number, number] => {
-  if (date) {
-    const [start, end] = date.split(',')
-    return [Number(start), Number(end)]
-  }
-  return
 }
 
 const DateLabel: React.FC<{ date: string; onClick: VoidFunction }> = ({
@@ -57,40 +47,26 @@ export const DateSetter: React.FC<DateSetterProps> = ({
   onChange,
   title,
 }) => {
-  const [dateDraft, onDateDraftChange] = useState(date)
-
   const api = useInputTimeRangeModal({
-    inputProps: {
-      value: parseTimeRange(dateDraft),
-      onChange: value => {
-        if (value) {
-          const [start, end] = value
-          onDateDraftChange([start, end].join(','))
-        } else {
-          onDateDraftChange(null)
-        }
-      },
-    },
+    date,
+    onChange,
     title,
-    onOk() {
-      // commit draft
-      onChange(dateDraft)
-    },
   })
 
   return (
     <>
       {api.modal}
       <Space>
-        {dateDraft ? (
-          <DateLabel date={dateDraft} onClick={() => api.setVisible(true)} />
+        {date ? (
+          <DateLabel date={date} onClick={() => api.setVisible(true)} />
         ) : (
-          <Button
-            size="small"
-            type="text"
-            icon={<FieldTimeOutlined />}
-            onClick={() => api.setVisible(true)}
-          />
+          // <Button
+          //   size="small"
+          //   type="text"
+          //   icon={<FieldTimeOutlined />}
+          //   onClick={() => api.setVisible(true)}
+          // />
+          <></>
         )}
       </Space>
     </>

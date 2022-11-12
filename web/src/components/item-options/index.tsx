@@ -5,16 +5,18 @@ import message from 'antd/lib/message'
 import { BaseType } from 'antd/lib/typography/Base'
 import React from 'react'
 
+import { globalState } from '@/state'
 import MoreOutlined from '@ant-design/icons/MoreOutlined'
 import { callService } from '@saber2pr/vscode-webview'
 
 import { KEY_TODO_TREE } from '../../../../src/constants'
 import { i18n } from '../../i18n'
 import { TreeNode } from '../../utils'
+import { useInputTimeRangeModal } from '../date-setter/input-time-range'
 import { usePromptModal } from '../prompt-modal'
 
 import type { Services } from '../../../../src/api/type'
-import { globalState } from '@/state'
+import SubMenu from 'antd/lib/menu/SubMenu'
 export const TodoLevels: Record<BaseType | 'default', number> = {
   danger: 0,
   warning: 1,
@@ -31,6 +33,7 @@ export interface OptionsBtnProps {
   onExpandAll: (node: TreeNode) => void
   onDelete: (node: TreeNode) => void
   onCollapseAll: (node: TreeNode) => void
+  onDateRangeSet: (date: string) => void
   menuOnly?: boolean
 }
 
@@ -50,10 +53,11 @@ export const useCreateItemMenu = ({
   onExpandAll,
   onDelete,
   onAddComment,
+  onDateRangeSet,
 }: OptionsBtnProps) => {
   const { modal: AddLinkModal, setVisible: setAddLinkVisible } = usePromptModal(
     {
-      onOk: (value) => {
+      onOk: value => {
         onAddLink(value)
         globalState.blockKeyboard = false
       },
@@ -63,12 +67,12 @@ export const useCreateItemMenu = ({
       onCancel: () => {
         globalState.blockKeyboard = false
       },
-    },
+    }
   )
 
   const { modal: AddCommentModal, setVisible: setAddCommentVisible } =
     usePromptModal({
-      onOk: (value) => {
+      onOk: value => {
         onAddComment(value)
         globalState.blockKeyboard = false
       },
@@ -81,14 +85,17 @@ export const useCreateItemMenu = ({
       type: 'textarea',
     })
 
+  const {
+    modal: InputTimeRangeModal,
+    setVisible: setInputTimeRangeModalVisible,
+  } = useInputTimeRangeModal({
+    date: node?.todo?.date,
+    onChange: onDateRangeSet,
+    title: node?.todo?.content,
+  })
+
   return (
     <Menu>
-      <Menu.Item onClick={() => onCollapseAll(node)}>
-        {i18n.format('collapseAll')}
-      </Menu.Item>
-      <Menu.Item onClick={() => onExpandAll(node)}>
-        {i18n.format('expandAll')}
-      </Menu.Item>
       <Menu.Item onClick={() => onDelete(node)}>
         {i18n.format('delete')}
       </Menu.Item>
@@ -98,28 +105,42 @@ export const useCreateItemMenu = ({
       <Menu.Item onClick={() => onPaste(node)}>
         {i18n.format('paste')}
       </Menu.Item>
-      <Menu.Item
-        onClick={() => {
-          globalState.blockKeyboard = true
-          setAddLinkVisible(true)
-        }}
-      >
-        {i18n.format('add_link')}
-      </Menu.Item>
-      <Menu.Item
-        onClick={() => {
-          globalState.blockKeyboard = true
-          setAddCommentVisible(true)
-        }}
-      >
-        {i18n.format('add_tip')}
-      </Menu.Item>
+      <SubMenu title={i18n.format('viewOps')}>
+        <Menu.Item onClick={() => onCollapseAll(node)}>
+          {i18n.format('collapseAll')}
+        </Menu.Item>
+        <Menu.Item onClick={() => onExpandAll(node)}>
+          {i18n.format('expandAll')}
+        </Menu.Item>
+      </SubMenu>
+      <SubMenu title={i18n.format('otherOptions')}>
+        <Menu.Item
+          onClick={() => {
+            globalState.blockKeyboard = true
+            setAddLinkVisible(true)
+          }}
+        >
+          {i18n.format('add_link')}
+        </Menu.Item>
+        <Menu.Item
+          onClick={() => {
+            globalState.blockKeyboard = true
+            setAddCommentVisible(true)
+          }}
+        >
+          {i18n.format('add_tip')}
+        </Menu.Item>
+        <Menu.Item onClick={() => setInputTimeRangeModalVisible(true)}>
+          {i18n.format('setTimeRange')}
+        </Menu.Item>
+      </SubMenu>
       {AddLinkModal}
       {AddCommentModal}
+      {InputTimeRangeModal}
     </Menu>
   )
 }
-export const ItemOptions: React.FC<OptionsBtnProps> = (props) => {
+export const ItemOptions: React.FC<OptionsBtnProps> = props => {
   const menu = useCreateItemMenu(props)
   return (
     <Dropdown trigger={['click']} overlay={menu}>

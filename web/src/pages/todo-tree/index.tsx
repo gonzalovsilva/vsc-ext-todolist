@@ -243,6 +243,10 @@ export const PageTodoTree = () => {
         updateExpandKeys(keys, 'push')
       },
       onDelete: () => deleteNode(node),
+      onDateRangeSet: date => {
+        todo.date = date
+        updateTree()
+      },
     }
     const itemMenu = useCreateItemMenu(itemOptions)
 

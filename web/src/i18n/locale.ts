@@ -66,7 +66,8 @@ export const localeMap = {
     webhook: 'Webhook',
     add_tip: 'Edit Comment',
     add_tip_placeholder: 'Edit Comment ...',
-    setTimeRange: 'Set time range',
+    setTimeRange: 'Set Time',
+    otherOptions: 'Other Options',
   },
   'zh-cn': {
     removeItemTip: '确定删除此待办事项？',
@@ -133,6 +134,7 @@ export const localeMap = {
     webhook: 'Webhook',
     add_tip: '编辑注释',
     add_tip_placeholder: '编辑注释...',
-    setTimeRange: '设置时间区间',
+    setTimeRange: '设置时间',
+    otherOptions: '其他选项',
   },
 }

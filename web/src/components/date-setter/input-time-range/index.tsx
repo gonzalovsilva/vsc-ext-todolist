@@ -1,8 +1,9 @@
-import { useModal } from '@/hooks/useModal'
-import { i18n } from '@/i18n'
 import { DatePicker, Divider, Typography } from 'antd'
 import moment from 'moment'
-import React from 'react'
+import React, { useState } from 'react'
+
+import { useModal } from '@/hooks/useModal'
+import { i18n } from '@/i18n'
 
 export interface InputTimeRangeProps {
   value: [number, number]
@@ -31,24 +32,42 @@ export const InputTimeRange: React.FC<InputTimeRangeProps> = ({
 
 export interface InputTimeRangeModalOps {
   title: string
-  inputProps: InputTimeRangeProps
-  onOk(): void
+  date: string // start,end
+  onChange(date: string): void
+}
+
+export const parseTimeRange = (date: string): [number, number] => {
+  if (date) {
+    const [start, end] = date.split(',')
+    return [Number(start), Number(end)]
+  }
+  return
 }
 
 export const useInputTimeRangeModal = ({
-  inputProps,
-  onOk,
+  date,
+  onChange,
   title,
 }: InputTimeRangeModalOps) => {
+  const [dateDraft, onDateDraftChange] = useState<InputTimeRangeProps['value']>(
+    parseTimeRange(date)
+  )
   return useModal({
     title: i18n.format('setTimeRange'),
     content: (
       <>
         <Typography.Paragraph>{title}</Typography.Paragraph>
         <Divider />
-        <InputTimeRange {...inputProps} />
+        <InputTimeRange value={dateDraft} onChange={onDateDraftChange} />
       </>
     ),
-    onOk: async () => onOk(),
+    onOk: async () => {
+      if (dateDraft) {
+        const [start, end] = dateDraft
+        onChange([start, end].join(','))
+      } else {
+        onChange(null)
+      }
+    },
   })
 }
