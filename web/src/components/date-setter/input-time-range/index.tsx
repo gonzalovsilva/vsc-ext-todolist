@@ -18,10 +18,10 @@ export const InputTimeRange: React.FC<InputTimeRangeProps> = ({
     <DatePicker.RangePicker
       allowClear
       value={value ? [moment.unix(value[0]), moment.unix(value[1])] : undefined}
-      onChange={value => {
+      onChange={(value) => {
         if (value) {
           const [start, end] = value
-          onChange([start.unix(), end.unix()])
+          onChange([start.startOf('day').unix(), end.endOf('day').unix()])
         } else {
           onChange(null)
         }
@@ -50,7 +50,7 @@ export const useInputTimeRangeModal = ({
   title,
 }: InputTimeRangeModalOps) => {
   const [dateDraft, onDateDraftChange] = useState<InputTimeRangeProps['value']>(
-    parseTimeRange(date)
+    parseTimeRange(date),
   )
   return useModal({
     title: i18n.format('setTimeRange'),

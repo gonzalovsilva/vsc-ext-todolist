@@ -68,6 +68,8 @@ export const localeMap = {
     add_tip_placeholder: 'Edit Comment ...',
     setTimeRange: 'Set Time',
     otherOptions: 'Other Options',
+    schedule: 'Schedule',
+    plan: 'Plan',
   },
   'zh-cn': {
     removeItemTip: '确定删除此待办事项？',
@@ -136,5 +138,7 @@ export const localeMap = {
     add_tip_placeholder: '编辑注释...',
     setTimeRange: '设置时间',
     otherOptions: '其他选项',
+    schedule: '排期表',
+    plan: '计划表',
   },
 }

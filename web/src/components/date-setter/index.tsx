@@ -1,3 +1,4 @@
+import { FieldTimeOutlined } from '@ant-design/icons'
 import { Button, Space } from 'antd'
 import moment from 'moment'
 import React, { useMemo } from 'react'
@@ -8,6 +9,7 @@ export interface DateSetterProps {
   title: string
   date: string // start,end
   onChange(date: string): void
+  readOnly?: boolean
 }
 
 const DateLabel: React.FC<{ date: string; onClick: VoidFunction }> = ({
@@ -45,6 +47,7 @@ const DateLabel: React.FC<{ date: string; onClick: VoidFunction }> = ({
 export const DateSetter: React.FC<DateSetterProps> = ({
   date,
   onChange,
+  readOnly = false,
   title,
 }) => {
   const api = useInputTimeRangeModal({
@@ -58,15 +61,19 @@ export const DateSetter: React.FC<DateSetterProps> = ({
       {api.modal}
       <Space>
         {date ? (
-          <DateLabel date={date} onClick={() => api.setVisible(true)} />
-        ) : (
-          // <Button
-          //   size="small"
-          //   type="text"
-          //   icon={<FieldTimeOutlined />}
-          //   onClick={() => api.setVisible(true)}
-          // />
+          <DateLabel
+            date={date}
+            onClick={() => (readOnly ? null : api.setVisible(true))}
+          />
+        ) : readOnly ? (
           <></>
+        ) : (
+          <Button
+            size="small"
+            type="text"
+            icon={<FieldTimeOutlined />}
+            onClick={() => api.setVisible(true)}
+          />
         )}
       </Space>
     </>

@@ -32,6 +32,24 @@ export const findNode = (
   }
 }
 
+export const findNodes = (
+  treeNode: TreeNode[],
+  finder: (item: TreeNode) => boolean,
+): TreeNode[] => {
+  const result: TreeNode[] = []
+
+  if (!(treeNode?.length > 0)) return result
+
+  const stack = Array.isArray(treeNode) ? treeNode.slice() : []
+  while (stack.length) {
+    const node = stack.pop()
+    if (finder(node)) result.push(node)
+    stack.push(...node.children)
+  }
+
+  return result
+}
+
 export const findNodeParent = (
   treeNode: TreeNode[],
   key: number | string,
