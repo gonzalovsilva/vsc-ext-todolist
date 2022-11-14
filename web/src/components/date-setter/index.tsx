@@ -38,9 +38,9 @@ const DateLabel: React.FC<{ date: string; onClick: VoidFunction }> = ({
   }
 
   return (
-    <Button type="text" size="small" onClick={onClick}>
+    <span className='ant-btn ant-btn-text ant-btn-sm' onClick={onClick}>
       {content.join('~')}
-    </Button>
+    </span>
   )
 }
 

@@ -32,6 +32,7 @@ export interface OptionsBtnProps {
   onAddComment: (comment: string) => void
   onExpandAll: (node: TreeNode) => void
   onDelete: (node: TreeNode) => void
+  onFocus: (node: TreeNode) => void
   onCollapseAll: (node: TreeNode) => void
   onDateRangeSet: (date: string) => void
   menuOnly?: boolean
@@ -54,10 +55,11 @@ export const useCreateItemMenu = ({
   onDelete,
   onAddComment,
   onDateRangeSet,
+  onFocus,
 }: OptionsBtnProps) => {
   const { modal: AddLinkModal, setVisible: setAddLinkVisible } = usePromptModal(
     {
-      onOk: value => {
+      onOk: (value) => {
         onAddLink(value)
         globalState.blockKeyboard = false
       },
@@ -67,12 +69,12 @@ export const useCreateItemMenu = ({
       onCancel: () => {
         globalState.blockKeyboard = false
       },
-    }
+    },
   )
 
   const { modal: AddCommentModal, setVisible: setAddCommentVisible } =
     usePromptModal({
-      onOk: value => {
+      onOk: (value) => {
         onAddComment(value)
         globalState.blockKeyboard = false
       },
@@ -96,6 +98,10 @@ export const useCreateItemMenu = ({
 
   return (
     <Menu>
+      <Menu.Item onClick={() => onFocus(node)}>
+        {node.todo.focus ? i18n.format('cancel') : ''}
+        {i18n.format('focus')}
+      </Menu.Item>
       <Menu.Item onClick={() => onDelete(node)}>
         {i18n.format('delete')}
       </Menu.Item>
@@ -140,7 +146,7 @@ export const useCreateItemMenu = ({
     </Menu>
   )
 }
-export const ItemOptions: React.FC<OptionsBtnProps> = props => {
+export const ItemOptions: React.FC<OptionsBtnProps> = (props) => {
   const menu = useCreateItemMenu(props)
   return (
     <Dropdown trigger={['click']} overlay={menu}>

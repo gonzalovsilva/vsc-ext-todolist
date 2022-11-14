@@ -6,11 +6,11 @@ import { useLocation } from 'react-router'
 import { parseTimeRange } from '@/components/date-setter/input-time-range'
 import { Navigator } from '@/components/navigator'
 import { useAsync } from '@/hooks/useAsync'
-import { findNodes, getArray, parseUrlParam } from '@/utils'
+import { findNodes, getArray, parseUrlParam, sortTree } from '@/utils'
 import { callService } from '@saber2pr/vscode-webview'
 
 import { KEY_TODO_TREE } from '../../../../src/constants'
-import { CellList } from './index.style'
+import { CellList, CellListStatus } from './index.style'
 
 import type { IStoreTodoTree, Services } from '../../../../src/api/type'
 export interface PageCalenderProps {}
@@ -59,14 +59,23 @@ export const PageCalender: React.FC<PageCalenderProps> = ({}) => {
     const endOfDay = value.endOf('day')
 
     const dayTodos = getTodoItemsByRange(startOfDay, endOfDay)
-
-    return getArray(dayTodos).map((dayTodo) => dayTodo?.todo)
+    return sortTree(getArray(dayTodos)).map((dayTodo) => dayTodo?.todo)
   }
 
   const dateCellRender = (value: Moment) => {
     const listData = getListData(value)
+    const count = listData.length
+    const doneCount = listData.reduce(
+      (acc, cur) => (cur.done ? acc + 1 : acc),
+      0,
+    )
     return (
       <CellList>
+        {count > 0 && (
+          <CellListStatus>
+            {doneCount}/{count}
+          </CellListStatus>
+        )}
         {listData.map((item, i) => {
           if (!item) return <React.Fragment key={i} />
           return (

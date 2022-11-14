@@ -51,6 +51,7 @@ export type ITodoItem = {
   pendingDelete?: boolean
   date?: string // start,end
   tip?: string
+  focus?: boolean
 }
 
 export type ITodoTree = {

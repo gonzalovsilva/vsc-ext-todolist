@@ -70,6 +70,7 @@ export const localeMap = {
     otherOptions: 'Other Options',
     schedule: 'Schedule',
     plan: 'Plan',
+    focus: 'Focus',
   },
   'zh-cn': {
     removeItemTip: '确定删除此待办事项？',
@@ -140,5 +141,6 @@ export const localeMap = {
     otherOptions: '其他选项',
     schedule: '排期表',
     plan: '计划表',
+    focus: '聚焦',
   },
 }

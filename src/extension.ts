@@ -119,12 +119,17 @@ export function activate(context: vscode.ExtensionContext) {
       VIEW_TYPE,
       new TodoEditor(context)
     ),
-    vscode.window.onDidChangeActiveColorTheme(event => {
+    vscode.window.onDidChangeActiveColorTheme(async event => {
+      const file = await ServicesHandlers.GetDisplayFile(null)
+      const name = parse(file).name
+
       webviewPanel?.visible &&
         activeProjectCreatorWebview(
           {
             theme:
               event.kind === vscode.ColorThemeKind.Light ? 'light' : 'dark',
+            file,
+            name,
           },
           true
         )
