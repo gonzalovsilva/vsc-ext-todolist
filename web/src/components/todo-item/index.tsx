@@ -105,7 +105,6 @@ export const TodoItem: React.FC<TodoItemProps> = ({
 
   return (
     <Text
-      style={{ color: 'inherit' }}
       delete={todo.done}
       type={todo.level === 'default' ? null : todo.level}
       disabled={todo.done ? true : false}
