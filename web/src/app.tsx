@@ -29,11 +29,16 @@ export const App = () => {
         setLanguage(language)
         navigate(
           APP_ARGS?.file
-            ? `/todo_v2?file=${APP_ARGS.file}&name=${APP_ARGS?.name}`
+            ? `/todo_v2?file=${APP_ARGS?.file}&name=${APP_ARGS?.name}`
             : `/todo_v2`,
         )
       },
     )
+
+    if(APP_ARGS?.colorTheme && typeof self !== 'undefined' && self?.document?.body?.setAttribute) {
+      self.document.body.setAttribute('data-color-theme', APP_ARGS.colorTheme)
+    }
+
   }, [history])
 
   return (

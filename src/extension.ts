@@ -7,6 +7,7 @@ import { IStoreTodoTree } from './api/type'
 import { COM_MAIN, KEY_TODO_TREE, VIEW_TYPE } from './constants'
 import { RCManager } from './store/rc'
 import { TodoEditor } from './TodoEditor'
+import { getThemeName } from './utils/getThemeName'
 import { isActiveThemeKind } from './utils/isActiveThemeKind'
 import {
   createWebviewContent,
@@ -104,6 +105,7 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand(COM_MAIN, async (reload: string) => {
       const file = await ServicesHandlers.GetDisplayFile(null)
       const name = parse(file).name
+      const colorTheme = getThemeName()
       activeProjectCreatorWebview(
         {
           theme: isActiveThemeKind(vscode.ColorThemeKind.Light)
@@ -111,6 +113,7 @@ export function activate(context: vscode.ExtensionContext) {
             : 'dark',
           file,
           name,
+          colorTheme
         },
         reload === 'true'
       )
@@ -122,6 +125,7 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.window.onDidChangeActiveColorTheme(async event => {
       const file = await ServicesHandlers.GetDisplayFile(null)
       const name = parse(file).name
+      const colorTheme = getThemeName()
 
       webviewPanel?.visible &&
         activeProjectCreatorWebview(
@@ -130,6 +134,7 @@ export function activate(context: vscode.ExtensionContext) {
               event.kind === vscode.ColorThemeKind.Light ? 'light' : 'dark',
             file,
             name,
+            colorTheme,
           },
           true
         )

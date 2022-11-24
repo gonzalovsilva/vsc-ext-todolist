@@ -2,43 +2,47 @@ body {
   background-color: var(--vscode-editor-background) !important;
 }
 
-.ant-tree {
-  background: inherit !important;
-  .ant-tree-node-content-wrapper {
-    &:hover {
-      background-color: var(--vscode-list-hoverBackground) !important;
-    }
-    &.ant-tree-node-selected {
-      background-color: var(--vscode-list-activeSelectionBackground) !important;
-      color: var(--vscode-list-activeSelectionForeground);
-      .ant-btn-text,
-      .ant-select,
-      .ant-select-arrow {
+body:not([data-color-theme*='Default Light+']):not([data-color-theme*='Visual Studio Light']) {
+  .ant-tree {
+    background: inherit !important;
+    .ant-tree-node-content-wrapper {
+      &:hover {
+        background-color: var(--vscode-list-hoverBackground) !important;
+      }
+      &.ant-tree-node-selected {
+        background-color: var(
+          --vscode-list-activeSelectionBackground
+        ) !important;
         color: var(--vscode-list-activeSelectionForeground);
+        .ant-btn-text,
+        .ant-select,
+        .ant-select-arrow {
+          color: var(--vscode-list-activeSelectionForeground);
+        }
       }
     }
   }
-}
 
-.ant-progress-inner {
-  background-color: var(--vscode-list-hoverBackground) !important;
-  .ant-progress-bg {
-    background-color: var(--vscode-list-activeSelectionBackground) !important;
-  }
-}
-
-.ant-select-dropdown {
-  background: var(--vscode-editorWidget-background) !important;
-  .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  .ant-progress-inner {
     background-color: var(--vscode-list-hoverBackground) !important;
+    .ant-progress-bg {
+      background-color: var(--vscode-list-activeSelectionBackground) !important;
+    }
   }
-  .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
-    background-color: var(--vscode-list-activeSelectionBackground) !important;
-    color: var(--vscode-list-activeSelectionForeground) !important;
-  }
-}
 
-.ant-select:not(.ant-select-customize-input) .ant-select-selector,
-.ant-select-arrow {
-  transition: none !important;
+  .ant-select-dropdown {
+    background: var(--vscode-editorWidget-background) !important;
+    .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+      background-color: var(--vscode-list-hoverBackground) !important;
+    }
+    .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+      background-color: var(--vscode-list-activeSelectionBackground) !important;
+      color: var(--vscode-list-activeSelectionForeground) !important;
+    }
+  }
+
+  .ant-select:not(.ant-select-customize-input) .ant-select-selector,
+  .ant-select-arrow {
+    transition: none !important;
+  }
 }

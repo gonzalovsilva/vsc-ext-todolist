@@ -5,6 +5,7 @@ export type WebviewParams = {
   file?: string
   name?: string
   theme?: 'light' | 'dark'
+  colorTheme?: string
 }
 
 export const createWebviewContent = ({
