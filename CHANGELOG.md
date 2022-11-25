@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.10](https://github.com/Saber2pr/vsc-ext-todolist/compare/v0.2.9...v0.2.10) (2022-11-25)
+
+
+### Features
+
+* server todo uid files ([88ef005](https://github.com/Saber2pr/vsc-ext-todolist/commit/88ef005be11982491e8f624f8a4a8051f2e47d7a))
+
 ### [0.2.9](https://github.com/Saber2pr/vsc-ext-todolist/compare/v0.2.8...v0.2.9) (2022-11-24)
 
 ### [0.2.8](https://github.com/Saber2pr/vsc-ext-todolist/compare/v0.2.7...v0.2.8) (2022-11-24)
