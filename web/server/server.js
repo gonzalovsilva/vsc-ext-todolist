@@ -12,12 +12,14 @@ app
   .use(bodyParser())
   .use(cors({ origin: '*' }))
 
+const TODO_REG = /^[a-zA-Z0-9_]+$/
+
 app.post('/api', async (req, res) => {
   const body = req.body
   console.log(body)
 
   let uid = req.query.uid
-  if (!/^\d+$/.test(uid)) uid = 'data'
+  if (!TODO_REG.test(uid)) uid = 'data'
 
   const service = body.service
   const params = body.params
