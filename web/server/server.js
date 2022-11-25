@@ -12,28 +12,33 @@ app
   .use(bodyParser())
   .use(cors({ origin: '*' }))
 
-const dataPath = join(__dirname, 'data.json')
-
-const servicesMock = {
-  GetLanguage: (params) => {
-    return 'zh-cn'
-  },
-  GetStore: ({ key }) => {
-    const rc = new RCManager(dataPath)
-    return rc.get(key)
-  },
-  Store: async ({ key, value }) => {
-    const rc = new RCManager(dataPath)
-    await rc.set(key, value)
-    return dataPath
-  },
-}
-
 app.post('/api', async (req, res) => {
   const body = req.body
   console.log(body)
+
+  let uid = req.query.uid
+  if (!/^\d+$/.test(uid)) uid = 'data'
+
   const service = body.service
   const params = body.params
+
+  const dataPath = join(__dirname, `${uid}.json`)
+
+  const servicesMock = {
+    GetLanguage: params => {
+      return 'zh-cn'
+    },
+    GetStore: ({ key }) => {
+      const rc = new RCManager(dataPath)
+      return rc.get(key)
+    },
+    Store: async ({ key, value }) => {
+      const rc = new RCManager(dataPath)
+      await rc.set(key, value)
+      return dataPath
+    },
+  }
+
   if (service && service in servicesMock) {
     res.json({
       serviceUri: service,
