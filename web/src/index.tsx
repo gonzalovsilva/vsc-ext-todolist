@@ -8,7 +8,7 @@ import { setMockVscodeApi } from '@saber2pr/vscode-webview'
 import { App } from './app'
 import { parseUrlParam } from './utils'
 
-const TODO_REG = /^[a-zA-Z0-9_]+$/
+const TODO_REG = /^[a-zA-Z0-9_-]+$/
 
 // for docker web service
 setMockVscodeApi({

@@ -12,7 +12,7 @@ app
   .use(bodyParser())
   .use(cors({ origin: '*' }))
 
-const TODO_REG = /^[a-zA-Z0-9_]+$/
+const TODO_REG = /^[a-zA-Z0-9_-]+$/
 
 app.post('/api', async (req, res) => {
   const body = req.body
