@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 
 import { useModal } from '@/hooks/useModal'
 import { i18n } from '@/i18n'
+import { parseTimeRange } from '@/utils/date'
 
 export interface InputTimeRangeProps {
   value: [number, number]
@@ -16,7 +17,7 @@ export const InputTimeRange: React.FC<InputTimeRangeProps> = ({
 }) => {
   return (
     <DatePicker.RangePicker
-      dateRender={(current) => {
+      dateRender={current => {
         const style: React.CSSProperties = {}
         if (current.day() === 0 || current.day() === 6) {
           style.opacity = 0.5
@@ -29,7 +30,7 @@ export const InputTimeRange: React.FC<InputTimeRangeProps> = ({
       }}
       allowClear
       value={value ? [moment.unix(value[0]), moment.unix(value[1])] : undefined}
-      onChange={(value) => {
+      onChange={value => {
         if (value) {
           const [start, end] = value
           onChange([start.startOf('day').unix(), end.endOf('day').unix()])
@@ -47,21 +48,13 @@ export interface InputTimeRangeModalOps {
   onChange(date: string): void
 }
 
-export const parseTimeRange = (date: string): [number, number] => {
-  if (date) {
-    const [start, end] = date.split(',')
-    return [Number(start), Number(end)]
-  }
-  return
-}
-
 export const useInputTimeRangeModal = ({
   date,
   onChange,
   title,
 }: InputTimeRangeModalOps) => {
   const [dateDraft, onDateDraftChange] = useState<InputTimeRangeProps['value']>(
-    parseTimeRange(date),
+    parseTimeRange(date)
   )
   return useModal({
     title: i18n.format('setTimeRange'),

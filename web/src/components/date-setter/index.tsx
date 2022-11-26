@@ -1,9 +1,10 @@
+import { parseTimeRange } from '@/utils/date'
 import { FieldTimeOutlined } from '@ant-design/icons'
 import { Button, Space } from 'antd'
 import moment from 'moment'
 import React, { useMemo } from 'react'
 
-import { parseTimeRange, useInputTimeRangeModal } from './input-time-range'
+import { useInputTimeRangeModal } from './input-time-range'
 
 export interface DateSetterProps {
   title: string
@@ -38,7 +39,7 @@ const DateLabel: React.FC<{ date: string; onClick: VoidFunction }> = ({
   }
 
   return (
-    <span className='ant-btn ant-btn-text ant-btn-sm' onClick={onClick}>
+    <span className="ant-btn ant-btn-text ant-btn-sm" onClick={onClick}>
       {content.join('~')}
     </span>
   )

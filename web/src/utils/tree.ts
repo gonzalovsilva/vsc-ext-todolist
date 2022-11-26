@@ -2,6 +2,7 @@ import { DataNode } from 'antd/lib/tree'
 
 import { ITodoItem, ITodoTree } from '../../../src/api/type'
 import { TodoLevels } from '../components'
+import { parseTimeRange } from './date'
 import { getArray } from './getArray'
 
 export interface TreeNode extends DataNode {
@@ -12,7 +13,7 @@ export interface TreeNode extends DataNode {
 
 export const getTreeKeys = (...tree: TreeNode[]) => {
   const keys = []
-  mapTree(tree, (node) => {
+  mapTree(tree, node => {
     node.key && keys.push(node.key)
     return node
   })
@@ -21,7 +22,7 @@ export const getTreeKeys = (...tree: TreeNode[]) => {
 
 export const findNode = (
   treeNode: TreeNode[],
-  key: number | string,
+  key: number | string
 ): TreeNode => {
   if (!(treeNode?.length > 0)) return
   const stack = Array.isArray(treeNode) ? treeNode.slice() : []
@@ -34,7 +35,7 @@ export const findNode = (
 
 export const findNodes = (
   treeNode: TreeNode[],
-  finder: (item: TreeNode) => boolean,
+  finder: (item: TreeNode) => boolean
 ): TreeNode[] => {
   const result: TreeNode[] = []
 
@@ -52,13 +53,13 @@ export const findNodes = (
 
 export const findNodeParent = (
   treeNode: TreeNode[],
-  key: number | string,
+  key: number | string
 ): TreeNode => {
   if (!(treeNode?.length > 0)) return
   const stack = Array.isArray(treeNode) ? treeNode.slice() : []
   while (stack.length) {
     const node = stack.pop()
-    const hasChild = getArray(node.children).find((item) => item.key == key)
+    const hasChild = getArray(node.children).find(item => item.key == key)
     if (hasChild) return node
     stack.push(...node.children)
   }
@@ -68,9 +69,9 @@ export const insertNodeSibling = (
   container: TreeNode[],
   key: number | string,
   newNode: TreeNode,
-  pos: 'before' | 'after' = 'after',
+  pos: 'before' | 'after' = 'after'
 ) => {
-  const index = getArray(container).findIndex((item) => item.key == key)
+  const index = getArray(container).findIndex(item => item.key == key)
   if (index === -1) {
     container.push(newNode)
   } else {
@@ -97,7 +98,7 @@ export const removeNode = (container: TreeNode[], node: TreeNode) => {
 }
 export const clearDoneNode = (
   treeNode: TreeNode[],
-  isRemove: (node: TreeNode) => boolean,
+  isRemove: (node: TreeNode) => boolean
 ) => {
   if (!(treeNode?.length > 0)) return []
   const nextTree: TreeNode[] = []
@@ -117,7 +118,7 @@ export interface TreeLike {
 
 export const mapTree = <N extends TreeLike, T extends TreeLike>(
   treeNode: N[],
-  mapFunc: (node: N) => T,
+  mapFunc: (node: N) => T
 ) => {
   if (!(treeNode?.length > 0)) return []
   const nextTree: T[] = []
@@ -132,7 +133,7 @@ export const mapTree = <N extends TreeLike, T extends TreeLike>(
 export const cloneTree = (tree: TreeNode[]) => {
   let i = 0
   const start = Date.now()
-  return mapTree(tree, (n) => {
+  return mapTree(tree, n => {
     const newNode = { ...n }
     i++
     newNode.key = start + i
@@ -151,7 +152,17 @@ export const sortTree = (treeNode: TreeNode[]) => {
     if (todoA && todoB) {
       const aVal = TodoLevels[todoA.level] ?? 0
       const bVal = TodoLevels[todoB.level] ?? 0
-      return aVal - bVal
+
+      const offset = aVal - bVal
+
+      // same level, compare date
+      if (offset === 0) {
+        const aDate = parseTimeRange(todoA.date) || [Number.MAX_VALUE]
+        const bDate = parseTimeRange(todoB.date) || [Number.MAX_VALUE]
+        return aDate[0] - bDate[0]
+      }
+
+      return offset
     }
     return 0
   })
