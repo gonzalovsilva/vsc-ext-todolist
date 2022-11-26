@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.13](https://github.com/Saber2pr/vsc-ext-todolist/compare/v0.2.2...v0.2.13) (2022-11-26)
+
+
+### Features
+
+* autosort ([0d27435](https://github.com/Saber2pr/vsc-ext-todolist/commit/0d27435da9345148d0af852b57e96c928553064c))
+* date selector style ([d215e62](https://github.com/Saber2pr/vsc-ext-todolist/commit/d215e62c715272f3dca9e28fbb33ec4ae129293b))
+* light theme color ([2a517b1](https://github.com/Saber2pr/vsc-ext-todolist/commit/2a517b1e71ee1a948e2f72c691cf43b20286e5c5))
+* light theme color ([6c877ec](https://github.com/Saber2pr/vsc-ext-todolist/commit/6c877ec2b7679695eb3cf7f6329f8c4c431f78b4))
+* light theme color ([006f9ae](https://github.com/Saber2pr/vsc-ext-todolist/commit/006f9ae68c6b4d9a0f7e1015e381d4fd5f551853))
+* page ([1bca58f](https://github.com/Saber2pr/vsc-ext-todolist/commit/1bca58f52a3fb07ca1b26674a0f6e371ab1ba7a7))
+* server todo uid files ([88ef005](https://github.com/Saber2pr/vsc-ext-todolist/commit/88ef005be11982491e8f624f8a4a8051f2e47d7a))
+* sort by date ([a57ab3d](https://github.com/Saber2pr/vsc-ext-todolist/commit/a57ab3da2e668ac3c3a7bf720cb05bfdee31edcd))
+* sort focus ([cffa409](https://github.com/Saber2pr/vsc-ext-todolist/commit/cffa409741c89dd49e3eb36becb83e57c6cc04e3))
+
 ### [0.2.12](https://github.com/Saber2pr/vsc-ext-todolist/compare/v0.2.11...v0.2.12) (2022-11-25)
 
 ### [0.2.11](https://github.com/Saber2pr/vsc-ext-todolist/compare/v0.2.10...v0.2.11) (2022-11-25)
