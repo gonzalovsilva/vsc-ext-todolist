@@ -99,8 +99,7 @@ export const useCreateItemMenu = ({
   return (
     <Menu>
       <Menu.Item onClick={() => onFocus(node)}>
-        {node.todo.focus ? i18n.format('cancel') : ''}
-        {i18n.format('focus')}
+        {node.todo.focus ? i18n.format('unfocus') : i18n.format('focus')}
       </Menu.Item>
       <Menu.Item onClick={() => onDelete(node)}>
         {i18n.format('delete')}

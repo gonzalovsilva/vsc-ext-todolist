@@ -113,7 +113,7 @@ export function activate(context: vscode.ExtensionContext) {
             : 'dark',
           file,
           name,
-          colorTheme
+          colorTheme,
         },
         reload === 'true'
       )

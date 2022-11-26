@@ -40,6 +40,7 @@ type FormValues = {
   showLine?: boolean
   playFontSize?: number
   webhook?: string
+  autoSort?: boolean
 }
 
 export const SettingsModal: React.FC<SettingsProps> = ({
@@ -113,6 +114,9 @@ export const SettingsModal: React.FC<SettingsProps> = ({
           tooltip={i18n.format('scroll_virtual_tip')}
           name="virtual"
         >
+          <FormCheckbox />
+        </Form.Item>
+        <Form.Item label={i18n.format('autoSort')} name="autoSort">
           <FormCheckbox />
         </Form.Item>
         <Form.Item

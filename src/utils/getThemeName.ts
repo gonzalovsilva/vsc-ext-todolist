@@ -1,3 +1,4 @@
-import { workspace } from "vscode";
+import { workspace } from 'vscode'
 
-export const getThemeName = () => String(workspace.getConfiguration().get<string>("workbench.colorTheme"))
+export const getThemeName = () =>
+  String(workspace.getConfiguration().get<string>('workbench.colorTheme'))

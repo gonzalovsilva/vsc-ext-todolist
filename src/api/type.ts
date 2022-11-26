@@ -10,6 +10,7 @@ export type IStoreTodoTree = {
   playFontSize?: number
   webhook?: string
   title?: string
+  autoSort?: boolean
 }
 
 // service type define

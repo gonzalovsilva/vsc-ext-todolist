@@ -89,7 +89,7 @@ export class TodoEditor implements CustomEditorProvider<TodoDocument> {
         file: document.uri.fsPath,
         name: parse(document.uri.fsPath).name,
         theme: isActiveThemeKind(ColorThemeKind.Light) ? 'light' : 'dark',
-        colorTheme: getThemeName()
+        colorTheme: getThemeName(),
       })
       webviewPanel.iconPath = Uri.file(
         join(this.context.extensionPath, 'assets', 'logo.png')
@@ -108,7 +108,7 @@ export class TodoEditor implements CustomEditorProvider<TodoDocument> {
               file: document.uri.fsPath,
               name: parse(document.uri.fsPath).name,
               theme: event.kind === ColorThemeKind.Light ? 'light' : 'dark',
-              colorTheme: getThemeName()
+              colorTheme: getThemeName(),
             })
         })
       )
