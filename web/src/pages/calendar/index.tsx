@@ -3,7 +3,6 @@ import { Moment } from 'moment'
 import React from 'react'
 import { useLocation } from 'react-router'
 
-import { parseTimeRange } from '@/components/date-setter/input-time-range'
 import { Navigator } from '@/components/navigator'
 import { useAsync } from '@/hooks/useAsync'
 import { findNodes, getArray, parseUrlParam, sortTree } from '@/utils'
@@ -13,6 +12,7 @@ import { KEY_TODO_TREE } from '../../../../src/constants'
 import { CellList, CellListStatus } from './index.style'
 
 import type { IStoreTodoTree, Services } from '../../../../src/api/type'
+import { parseTimeRange } from '@/utils/date'
 export interface PageCalenderProps {}
 
 export const PageCalender: React.FC<PageCalenderProps> = ({}) => {
@@ -35,7 +35,7 @@ export const PageCalender: React.FC<PageCalenderProps> = ({}) => {
       const startUnix = start.unix()
       const endUnix = end.unix()
 
-      const result = findNodes(getArray(data?.tree), (item) => {
+      const result = findNodes(getArray(data?.tree), item => {
         const date = item?.todo?.date
         if (date) {
           const todoDateRange = parseTimeRange(date)
@@ -59,7 +59,7 @@ export const PageCalender: React.FC<PageCalenderProps> = ({}) => {
     const endOfDay = value.endOf('day')
 
     const dayTodos = getTodoItemsByRange(startOfDay, endOfDay)
-    return sortTree(getArray(dayTodos)).map((dayTodo) => dayTodo?.todo)
+    return sortTree(getArray(dayTodos)).map(dayTodo => dayTodo?.todo)
   }
 
   const dateCellRender = (value: Moment) => {
@@ -67,7 +67,7 @@ export const PageCalender: React.FC<PageCalenderProps> = ({}) => {
     const count = listData.length
     const doneCount = listData.reduce(
       (acc, cur) => (cur.done ? acc + 1 : acc),
-      0,
+      0
     )
     return (
       <CellList>
@@ -124,7 +124,7 @@ export const PageCalender: React.FC<PageCalenderProps> = ({}) => {
             monthOptions.push(
               <Select.Option key={i} value={i} className="month-item">
                 {months[i]}
-              </Select.Option>,
+              </Select.Option>
             )
           }
 
@@ -135,7 +135,7 @@ export const PageCalender: React.FC<PageCalenderProps> = ({}) => {
             options.push(
               <Select.Option key={i} value={i} className="year-item">
                 {i}
-              </Select.Option>,
+              </Select.Option>
             )
           }
           return (
@@ -157,7 +157,7 @@ export const PageCalender: React.FC<PageCalenderProps> = ({}) => {
                     dropdownMatchSelectWidth={false}
                     className="my-year-select"
                     value={year}
-                    onChange={(newYear) => {
+                    onChange={newYear => {
                       const now = value.clone().year(newYear)
                       onChange(now)
                     }}
@@ -170,7 +170,7 @@ export const PageCalender: React.FC<PageCalenderProps> = ({}) => {
                     size="small"
                     dropdownMatchSelectWidth={false}
                     value={month}
-                    onChange={(newMonth) => {
+                    onChange={newMonth => {
                       const now = value.clone().month(newMonth)
                       onChange(now)
                     }}

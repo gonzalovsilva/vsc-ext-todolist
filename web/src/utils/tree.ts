@@ -168,18 +168,21 @@ export const sortTree = (treeNode: TreeNode[]) => {
   })
 
   // split
+  const newTreeNodeFocus: TreeNode[] = []
   const newTreeNodeProcess: TreeNode[] = []
   const newTreeNodeDone: TreeNode[] = []
   for (const node of treeNodeSorted) {
     if (node?.todo?.done) {
       newTreeNodeDone.push(node)
+    } else if (node?.todo?.focus) {
+      newTreeNodeFocus.push(node)
     } else {
       newTreeNodeProcess.push(node)
     }
   }
 
-  // concat
-  const newTree = newTreeNodeProcess.concat(newTreeNodeDone)
+  // concat: focus > process > done
+  const newTree = newTreeNodeFocus.concat(newTreeNodeProcess, newTreeNodeDone)
   for (const node of newTree) {
     const newNode = { ...node }
     newNode.children = sortTree(newNode.children)
