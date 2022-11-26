@@ -11,6 +11,7 @@ export type IStoreTodoTree = {
   webhook?: string
   title?: string
   autoSort?: boolean
+  page?: 'plan' | 'schedule'
 }
 
 // service type define

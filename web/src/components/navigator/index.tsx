@@ -1,20 +1,22 @@
 import { Radio, Space } from 'antd'
 import React, { useState } from 'react'
-import { useMatch, useNavigate } from 'react-router'
+import { useMatch } from 'react-router'
 
+import { usePage } from '@/hooks/usePage'
+import { useSettingsStore } from '@/hooks/useSettingsStore'
 import { i18n } from '@/i18n'
-import { APP_ARGS } from '@/utils'
 import { BarsOutlined, CalendarOutlined } from '@ant-design/icons'
 
 export interface NavigatorProps {}
 
 export const Navigator: React.FC<NavigatorProps> = ({}) => {
-  const navigate = useNavigate()
+  const page = usePage()
+  const settings = useSettingsStore()
 
   const isPlan = useMatch('/todo_v2')
 
   const [activeKey, setActiveKey] = useState<'plan' | 'schedule'>(
-    isPlan ? 'plan' : 'schedule',
+    isPlan ? 'plan' : 'schedule'
   )
 
   const links = [
@@ -26,12 +28,7 @@ export const Navigator: React.FC<NavigatorProps> = ({}) => {
           <span>{i18n.format('plan')}</span>
         </Space>
       ),
-      onClick: () =>
-        navigate(
-          APP_ARGS?.file
-            ? `/todo_v2?file=${APP_ARGS.file}&name=${APP_ARGS?.name}`
-            : `/todo_v2`,
-        ),
+      onClick: () => page.gotoPlan(),
     },
     {
       key: 'schedule',
@@ -41,12 +38,7 @@ export const Navigator: React.FC<NavigatorProps> = ({}) => {
           <span>{i18n.format('schedule')}</span>
         </Space>
       ),
-      onClick: () =>
-        navigate(
-          APP_ARGS.file
-            ? `/calendar?file=${APP_ARGS.file}&name=${APP_ARGS?.name}`
-            : '/calendar',
-        ),
+      onClick: () => page.gotoSchedule(),
     },
   ]
 
@@ -54,11 +46,15 @@ export const Navigator: React.FC<NavigatorProps> = ({}) => {
     <Radio.Group
       size="small"
       value={activeKey}
-      onChange={(event) => {
+      onChange={event => {
         setActiveKey(event.target.value)
+        settings.set(data => {
+          data.page = event.target.value
+          return data
+        })
       }}
     >
-      {links.map((link) => (
+      {links.map(link => (
         <Radio.Button key={link.key} value={link.key} onClick={link.onClick}>
           {link.label}
         </Radio.Button>
