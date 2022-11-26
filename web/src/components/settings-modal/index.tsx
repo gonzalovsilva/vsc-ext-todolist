@@ -116,9 +116,6 @@ export const SettingsModal: React.FC<SettingsProps> = ({
         >
           <FormCheckbox />
         </Form.Item>
-        <Form.Item label={i18n.format('autoSort')} name="autoSort">
-          <FormCheckbox />
-        </Form.Item>
         <Form.Item
           label={i18n.format('display_file')}
           tooltip={i18n.format('display_file_tip')}
@@ -128,6 +125,9 @@ export const SettingsModal: React.FC<SettingsProps> = ({
         </Form.Item>
         <Collapse bordered>
           <Collapse.Panel header={i18n.format('advanced')} key="advanced">
+            <Form.Item label={i18n.format('autoSort')} name="autoSort">
+              <FormCheckbox />
+            </Form.Item>
             <Form.Item label={i18n.format('showLine')} name="showLine">
               <FormCheckbox />
             </Form.Item>
