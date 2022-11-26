@@ -16,6 +16,17 @@ export const InputTimeRange: React.FC<InputTimeRangeProps> = ({
 }) => {
   return (
     <DatePicker.RangePicker
+      dateRender={(current) => {
+        const style: React.CSSProperties = {}
+        if (current.day() === 0 || current.day() === 6) {
+          style.opacity = 0.5
+        }
+        return (
+          <div className="ant-picker-cell-inner" style={style}>
+            {current.date()}
+          </div>
+        )
+      }}
       allowClear
       value={value ? [moment.unix(value[0]), moment.unix(value[1])] : undefined}
       onChange={(value) => {
