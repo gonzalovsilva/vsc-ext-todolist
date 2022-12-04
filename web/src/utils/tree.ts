@@ -11,6 +11,17 @@ export interface TreeNode extends DataNode {
   toJSON?: () => ITodoTree
 }
 
+export const isTreeNodeJson = (node: string) => {
+  return (
+    /todo/.test(node) &&
+    /children/.test(node) &&
+    /id/.test(node) &&
+    /content/.test(node) &&
+    /done/.test(node) &&
+    /level/.test(node)
+  )
+}
+
 export const getTreeKeys = (...tree: TreeNode[]) => {
   const keys = []
   mapTree(tree, node => {

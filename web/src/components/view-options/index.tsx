@@ -8,6 +8,7 @@ import { Services } from '../../../../src/api/type'
 import { KEY_TODO_TREE } from '../../../../src/constants'
 import { i18n } from '../../i18n'
 import { cloneTree, getArray, TreeNode } from '../../utils'
+import { copyer } from '@/utils/copyer'
 
 export interface ViewOptionsProps {
   tree: TreeNode[]
@@ -35,10 +36,7 @@ export const ViewOptions: React.FC<ViewOptionsProps> = ({
       <Menu.Item onClick={onExpandAll}>{i18n.format('expandAll')}</Menu.Item>
       <Menu.Item
         onClick={async () => {
-          await callService<Services, 'SetTemp'>('SetTemp', {
-            key: KEY_TODO_TREE,
-            value: JSON.parse(JSON.stringify(getArray(tree))),
-          })
+          copyer.copyTree(getArray(tree))
           message.success(i18n.format('copy_success'))
         }}
       >
@@ -46,12 +44,7 @@ export const ViewOptions: React.FC<ViewOptionsProps> = ({
       </Menu.Item>
       <Menu.Item
         onClick={async () => {
-          const tree: TreeNode[] = await callService<Services, 'GetTemp'>(
-            'GetTemp',
-            {
-              key: KEY_TODO_TREE,
-            },
-          )
+          const tree: TreeNode[] = await copyer.readTree()
           onPaste(cloneTree(getArray(tree)))
         }}
       >

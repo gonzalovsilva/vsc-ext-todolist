@@ -1,7 +1,6 @@
 import { message, Tooltip } from 'antd'
 import Typography from 'antd/lib/typography'
 import React, { useMemo, useState } from 'react'
-import ClipboardJS from 'clipboard'
 
 import { globalState } from '@/state'
 import {
@@ -13,6 +12,7 @@ import { callService, isInVscode } from '@saber2pr/vscode-webview'
 
 import type { ITodoItem, Services } from '../../../../src/api/type'
 import { i18n } from '@/i18n'
+import { copyer } from '@/utils/copyer'
 const { Text } = Typography
 
 export interface TodoItemProps {
@@ -47,7 +47,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
         <CopyOutlined
           style={{ marginLeft: 4, cursor: 'pointer' }}
           onClick={() => {
-            ClipboardJS.copy(todo?.content)
+            copyer.copy(todo?.content)
             message.success(i18n.format('copy_content_success'))
           }}
         />
