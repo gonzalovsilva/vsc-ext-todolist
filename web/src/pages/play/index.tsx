@@ -60,7 +60,7 @@ export const PagePlay: React.FC<PagePlayProps> = ({}) => {
     }
   }
 
-  const msg = node?.todo?.content || params?.name
+  const msg = node?.todo?.content || data?.title
 
   useEffect(() => {
     const onKeydownHandle = (event: KeyboardEvent) => {

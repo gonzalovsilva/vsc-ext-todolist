@@ -109,9 +109,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
       type={todo.level === 'default' ? null : todo.level}
       disabled={todo.done ? true : false}
       editable={
-        !isInVscode
-          ? false
-          : todo.done
+        todo.done
           ? false
           : {
               tooltip: false,

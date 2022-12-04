@@ -73,6 +73,8 @@ export const localeMap = {
     focus: 'Focus',
     unfocus: 'UnFocus',
     autoSort: 'Auto Sort',
+    language: 'Language',
+    import: 'Import',
   },
   'zh-cn': {
     removeItemTip: '确定删除此待办事项？',
@@ -146,5 +148,7 @@ export const localeMap = {
     focus: '聚焦',
     unfocus: '取消聚焦',
     autoSort: '自动排序',
+    language: '语言',
+    import: '导入',
   },
 }

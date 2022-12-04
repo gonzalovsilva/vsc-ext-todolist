@@ -17,6 +17,7 @@ import {
   Typography,
 } from 'antd'
 import axios from 'axios'
+import classnames from 'classnames'
 import nprogress from 'nprogress'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
@@ -27,6 +28,8 @@ import { Navigator } from '@/components/navigator'
 import { DEFAULT_PLAYFONTSIZE } from '@/components/words-inputing'
 import { globalState } from '@/state'
 import { calcProgressV2 } from '@/utils/calc-progress'
+import { copyer } from '@/utils/copyer'
+import { webSaveFile } from '@/utils/webSaveFile'
 import CheckOutlined from '@ant-design/icons/CheckOutlined'
 import PlusOutlined from '@ant-design/icons/PlusOutlined'
 import UndoOutlined from '@ant-design/icons/UndoOutlined'
@@ -67,8 +70,6 @@ import {
 } from '../../utils'
 import { parseUrlParam } from '../../utils/parseUrlParam'
 import { ScheduleLink } from './index.style'
-import classnames from 'classnames'
-import { copyer } from '@/utils/copyer'
 
 const { Title } = Typography
 
@@ -78,7 +79,11 @@ nprogress.configure({
   showSpinner: false,
 })
 
-export const PageTodoTree = () => {
+export interface PageTodoTreeProps {
+  onLangChange?(lang: 'zh-cn' | 'en'): void
+}
+
+export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
   const [_, setState] = useState({})
   const forceUpdate = () => setState({})
 
@@ -86,7 +91,7 @@ export const PageTodoTree = () => {
   const updateExpandKeys = (keys: Key[], type: 'push' | 'replace' = 'push') => {
     const expandKeys = getArray(expandKeysRef.current)
     expandKeysRef.current = Array.from(
-      new Set(type === 'push' ? [...expandKeys, ...keys] : keys),
+      new Set(type === 'push' ? [...expandKeys, ...keys] : keys)
     )
     forceUpdate()
   }
@@ -100,7 +105,7 @@ export const PageTodoTree = () => {
       treeRef.current = autoSort ? sortTree(data.slice()) : data.slice()
     }
     forceUpdate()
-    events.forEach((l) => l())
+    events.forEach(l => l())
   }
 
   const location = useLocation()
@@ -115,12 +120,13 @@ export const PageTodoTree = () => {
   const [autoSort, setAutoSort] = useState<boolean>(false)
   const [playFontSize, setPlayFontSize] = useState<number>(0)
   const [webhook, setWebhook] = useState<string>()
+  const [lang, setLang] = useState<'zh-cn' | 'en'>('en')
   const [STORE_TITLE, setSTORE_TITLE] = useState<string>()
 
   // for hook message
   useEffect(() => {
     if (webhook) {
-      mockVscodeApi.hook = (message) => axios.post(webhook, message)
+      mockVscodeApi.hook = message => axios.post(webhook, message)
     } else {
       mockVscodeApi.hook = null
     }
@@ -128,15 +134,17 @@ export const PageTodoTree = () => {
 
   // init
   const loadSource = async (
-    callback?: (tree: IStoreTodoTree['tree']) => IStoreTodoTree['tree'],
+    callback?: (tree: IStoreTodoTree['tree']) => IStoreTodoTree['tree']
   ) => {
     setLoaded(false)
-    // config
-    const displayFile = await callService<Services, 'GetDisplayFile'>(
-      'GetDisplayFile',
-      null,
-    )
-    displayFileRef.current = displayFile
+    if (isInVscode) {
+      // config
+      const displayFile = await callService<Services, 'GetDisplayFile'>(
+        'GetDisplayFile',
+        null
+      )
+      displayFileRef.current = displayFile
+    }
     // load todo file
     const todo = await callService<Services, 'GetStore'>('GetStore', {
       key: KEY_TODO_TREE,
@@ -154,6 +162,7 @@ export const PageTodoTree = () => {
       setPlayFontSize(val.playFontSize || DEFAULT_PLAYFONTSIZE)
       setWebhook(val.webhook)
       setSTORE_TITLE(val.title)
+      setLang(val.lang || 'en')
       forceUpdate()
     }
     setLoaded(true)
@@ -174,7 +183,7 @@ export const PageTodoTree = () => {
         node.todo.pendingDelete = true
         treeRef.current = clearDoneNode(
           treeRef.current,
-          (node) => node.todo.pendingDelete,
+          node => node.todo.pendingDelete
         )
         updateTree()
         globalState.blockKeyboard = false
@@ -203,6 +212,17 @@ export const PageTodoTree = () => {
     updateExpandKeys([node.key], 'push')
   }
 
+  const pasteCopiedTree = (copyTree: TreeNode[]) => {
+    const current = getArray(treeRef.current)
+    const newNodes = getArray(copyTree)
+    if (addMode === 'top') {
+      treeRef.current = newNodes.concat(current)
+    } else {
+      treeRef.current = current.concat(newNodes)
+    }
+    updateTree()
+  }
+
   const addSiblingNode = (node: TreeNode) => {
     const parent = findNodeParent(treeRef.current, node.key)
     if (parent) {
@@ -219,7 +239,7 @@ export const PageTodoTree = () => {
       const listener = () => setState({})
       events.push(listener)
       return () => {
-        events = events.filter((l) => l !== listener)
+        events = events.filter(l => l !== listener)
       }
     }, [])
     const todo = node.todo
@@ -233,27 +253,27 @@ export const PageTodoTree = () => {
         updateTree()
       },
       onPaste: pasteNode,
-      onAddLink: (link) => {
+      onAddLink: link => {
         todo.link = link
         updateTree()
       },
-      onAddComment: (tip) => {
+      onAddComment: tip => {
         todo.tip = tip
         updateTree()
       },
-      onCollapseAll: (node) => {
+      onCollapseAll: node => {
         const keys = getTreeKeys(node)
         const keysMap = keys.reduce((acc, k) => ({ ...acc, [k]: k }), {})
         const currentKeys = getArray(expandKeysRef.current)
-        const nextKeys = currentKeys.filter((k) => !keysMap[k])
+        const nextKeys = currentKeys.filter(k => !keysMap[k])
         updateExpandKeys(nextKeys, 'replace')
       },
-      onExpandAll: (node) => {
+      onExpandAll: node => {
         const keys = getTreeKeys(node)
         updateExpandKeys(keys, 'push')
       },
       onDelete: () => deleteNode(node),
-      onDateRangeSet: (date) => {
+      onDateRangeSet: date => {
         todo.date = date
         updateTree()
       },
@@ -267,7 +287,7 @@ export const PageTodoTree = () => {
             readOnly
             title={todo.content}
             date={todo.date}
-            onChange={(date) => {}}
+            onChange={date => {}}
           />
           <Button
             size="small"
@@ -286,7 +306,7 @@ export const PageTodoTree = () => {
           <DateSetter
             title={todo.content}
             date={todo.date}
-            onChange={(date) => {
+            onChange={date => {
               todo.date = date
               updateTree()
             }}
@@ -295,11 +315,11 @@ export const PageTodoTree = () => {
             bordered={false}
             size="small"
             value={todo.level}
-            onSelect={(level) => {
+            onSelect={level => {
               todo.level = level
               updateTree()
             }}
-            options={Object.keys(TodoLevels).map((level) => ({
+            options={Object.keys(TodoLevels).map(level => ({
               label: `P${TodoLevels[level]}`,
               value: level,
             }))}
@@ -326,10 +346,7 @@ export const PageTodoTree = () => {
     }
 
     return (
-      <Dropdown
-        trigger={['contextMenu']}
-        overlay={isInVscode ? itemMenu : <></>}
-      >
+      <Dropdown trigger={['contextMenu']} overlay={itemMenu}>
         <Space
           className={classnames('todo', todo?.focus ? 'ani-border' : null)}
           style={{
@@ -341,19 +358,7 @@ export const PageTodoTree = () => {
             nodeKey={node.key}
             onChange={() => updateTree()}
           />
-          {isInVscode ? (
-            ops
-          ) : (
-            <DateSetter
-              title={todo.content}
-              date={todo.date}
-              readOnly
-              onChange={(date) => {
-                todo.date = date
-                updateTree()
-              }}
-            />
-          )}
+          {ops}
         </Space>
       </Dropdown>
     )
@@ -386,7 +391,7 @@ export const PageTodoTree = () => {
         getContainer(),
         anchor.key,
         node,
-        addMode === 'bottom' ? 'after' : 'before',
+        addMode === 'bottom' ? 'after' : 'before'
       )
     } else {
       if (addMode === 'top') {
@@ -397,16 +402,18 @@ export const PageTodoTree = () => {
     }
   }
 
-  const autoRefreshInterval = isInVscode ? null : 3000
+  const autoRefreshInterval = isInVscode ? null : 10000
   useInterval(() => {
-    if (!isInVscode) {
-      isMounted.current = false
-      loadSource()
+    if (!globalState.blockKeyboard) {
+      if (!isInVscode) {
+        isMounted.current = false
+        loadSource()
+      }
     }
   }, autoRefreshInterval)
 
   const save = async () => {
-    isInVscode && nprogress.start()
+    nprogress.start()
     const storeVal: IStoreTodoTree = {
       tree: treeRef.current,
       expandKeys: expandKeysRef.current,
@@ -419,6 +426,7 @@ export const PageTodoTree = () => {
       webhook: webhook,
       title: TITLE,
       autoSort,
+      lang,
     }
     const tree = JSON.parse(JSON.stringify(storeVal))
     await callService<Services, 'Store'>('Store', {
@@ -426,7 +434,7 @@ export const PageTodoTree = () => {
       value: tree,
       path: params?.file,
     })
-    isInVscode && nprogress.done()
+    nprogress.done()
     return {
       [KEY_TODO_TREE]: tree,
     }
@@ -458,11 +466,12 @@ export const PageTodoTree = () => {
     autoSort,
     playFontSize,
     webhook,
+    lang,
   ])
 
   const percent = useMemo(
     () => calcProgressV2(treeRef.current),
-    [treeRef.current],
+    [treeRef.current]
   )
 
   let TITLE = params?.name ?? STORE_TITLE ?? 'Todo List'
@@ -489,6 +498,7 @@ export const PageTodoTree = () => {
       autoSort,
       playFontSize,
       webhook,
+      lang,
     },
     async onFinish(values) {
       const isChangeDisplay = values?.displayFile !== displayFileRef.current
@@ -505,6 +515,7 @@ export const PageTodoTree = () => {
       setAutoSort(!!values?.autoSort)
       setPlayFontSize(values?.playFontSize || DEFAULT_PLAYFONTSIZE)
       setWebhook(values?.webhook)
+      setLang(values?.lang)
       message.success(i18n.format('settingTip'))
       setVisible(false)
       globalState.blockKeyboard = false
@@ -514,11 +525,17 @@ export const PageTodoTree = () => {
     },
     async onSaveAs() {
       const content = await save()
-      await callService<Services, 'SaveFileAs'>('SaveFileAs', {
-        title: i18n.format('save_file'),
-        content: JSON.stringify(content),
-        name: `${TITLE}.todo`,
-      })
+      const fileName = `${TITLE}.todo`
+      const fileContent = JSON.stringify(content)
+      if (isInVscode) {
+        await callService<Services, 'SaveFileAs'>('SaveFileAs', {
+          title: i18n.format('save_file'),
+          content: fileContent,
+          name: fileName,
+        })
+      } else {
+        webSaveFile(fileName, fileContent)
+      }
     },
     async onParseMd() {
       setShowMdOptionsModal(true)
@@ -526,6 +543,8 @@ export const PageTodoTree = () => {
     async onPlay() {
       navigate(`/play?file=${APP_ARGS.file}&name=${APP_ARGS?.name}`)
     },
+    onPaste: pasteCopiedTree,
+    onLangChange,
   })
 
   return (
@@ -555,8 +574,8 @@ export const PageTodoTree = () => {
                 virtualMode={virtualMode}
                 titleRender={(node: TreeNode) => <Item node={node} />}
                 expandedKeys={expandKeysRef.current}
-                onExpand={(keys) => updateExpandKeys(keys, 'replace')}
-                handleDrop={(data) => {
+                onExpand={keys => updateExpandKeys(keys, 'replace')}
+                handleDrop={data => {
                   treeRef.current = data
                   updateTree()
                 }}
@@ -589,103 +608,98 @@ export const PageTodoTree = () => {
             )}
           </Spin>
         </div>
-        {isInVscode && (
-          <Affix offsetBottom={0}>
-            <div className="tools-wrapper" ref={toolsWrapperRef}>
-              <Divider className="tools-wrapper-div" style={{ margin: 0 }} />
-              <Space split={<Divider type="vertical" />}>
-                <Button
-                  type="text"
-                  onClick={() => {
-                    createNode(() => treeRef.current)
-                    updateTree()
-                  }}
-                >
-                  {i18n.format('newItem')}
-                </Button>
-                <Button
-                  type="text"
-                  onClick={async () => {
-                    await save()
-                    message.success(i18n.format('saveTip'))
-                  }}
-                >
-                  {i18n.format('save')}
-                </Button>
-                <Popconfirm
-                  placement="top"
-                  title={i18n.format('clearDoneTip')}
-                  onConfirm={() => {
-                    treeRef.current = clearDoneNode(
-                      treeRef.current,
-                      (node) => node.todo.done,
-                    )
-                    updateTree()
-                  }}
-                  okText={i18n.format('confirm')}
-                  cancelText={i18n.format('cancel')}
-                >
-                  <Button type="text">{i18n.format('clearDone')}</Button>
-                </Popconfirm>
-                <ViewOptions
-                  tree={getArray(treeRef.current)}
-                  onUpdate={async () => {
-                    isMounted.current = false
-                    await loadSource()
-                    message.success(i18n.format('updateTip'))
-                  }}
-                  onSort={async () => {
-                    await loadSource(sortTree)
-                    message.success(i18n.format('sort_tip'))
-                  }}
-                  onCollapseAll={() => {
-                    updateExpandKeys([], 'replace')
-                  }}
-                  onExpandAll={() => {
-                    const keys = getTreeKeys(...treeRef.current)
-                    updateExpandKeys(keys, 'replace')
-                  }}
-                  onPaste={(copyTree) => {
-                    const current = getArray(treeRef.current)
-                    const newNodes = getArray(copyTree)
-                    if (addMode === 'top') {
-                      treeRef.current = newNodes.concat(current)
-                    } else {
-                      treeRef.current = current.concat(newNodes)
-                    }
-                    updateTree()
-                  }}
-                />
-                <Button
-                  type="text"
-                  onClick={() => {
-                    setVisible(true)
-                    globalState.blockKeyboard = true
-                    globalState.currentSelectKey = null
-                    globalState.latestCreateKey = null
-                  }}
-                >
-                  {i18n.format('setting')}
-                </Button>
-              </Space>
-            </div>
-          </Affix>
-        )}
+        <Affix offsetBottom={0}>
+          <div className="tools-wrapper" ref={toolsWrapperRef}>
+            <Divider className="tools-wrapper-div" style={{ margin: 0 }} />
+            <Space split={<Divider type="vertical" />}>
+              <Button
+                type="text"
+                onClick={() => {
+                  createNode(() => treeRef.current)
+                  updateTree()
+                }}
+              >
+                {i18n.format('newItem')}
+              </Button>
+              <Button
+                type="text"
+                onClick={async () => {
+                  await save()
+                  message.success(i18n.format('saveTip'))
+                }}
+              >
+                {i18n.format('save')}
+              </Button>
+              <Popconfirm
+                placement="top"
+                title={i18n.format('clearDoneTip')}
+                onConfirm={() => {
+                  treeRef.current = clearDoneNode(
+                    treeRef.current,
+                    node => node.todo.done
+                  )
+                  updateTree()
+                }}
+                okText={i18n.format('confirm')}
+                cancelText={i18n.format('cancel')}
+              >
+                <Button type="text">{i18n.format('clearDone')}</Button>
+              </Popconfirm>
+              <ViewOptions
+                tree={getArray(treeRef.current)}
+                onUpdate={async () => {
+                  isMounted.current = false
+                  await loadSource()
+                  message.success(i18n.format('updateTip'))
+                }}
+                onSort={async () => {
+                  await loadSource(sortTree)
+                  message.success(i18n.format('sort_tip'))
+                }}
+                onCollapseAll={() => {
+                  updateExpandKeys([], 'replace')
+                }}
+                onExpandAll={() => {
+                  const keys = getTreeKeys(...treeRef.current)
+                  updateExpandKeys(keys, 'replace')
+                }}
+                onPaste={pasteCopiedTree}
+              />
+              <Button
+                type="text"
+                onClick={() => {
+                  setVisible(true)
+                  globalState.blockKeyboard = true
+                  globalState.currentSelectKey = null
+                  globalState.latestCreateKey = null
+                }}
+              >
+                {i18n.format('setting')}
+              </Button>
+            </Space>
+          </div>
+        </Affix>
         <MdOptionModal
           visible={showMdOptionsModal}
           onCancel={() => setShowMdOptionsModal(false)}
-          onOk={async (values) => {
+          onOk={async values => {
             const tree = treeRef.current
             if (tree) {
-              await callService<Services, 'SaveFile'>('SaveFile', {
-                title: i18n.format('save_md'),
-                path: `${TITLE}.md`,
-                content: compileMd(treeRef.current, {
-                  noTab: values.useTab === 'no-tab',
-                  displayDone: values.displayDone,
-                  displayLink: values.displayLink,
-                }),
+              const fileName = `${TITLE}.md`
+              const fileContent = compileMd(treeRef.current, {
+                noTab: values.useTab === 'no-tab',
+                displayDone: values.displayDone,
+                displayLink: values.displayLink,
               })
+              if (isInVscode) {
+                await callService<Services, 'SaveFile'>('SaveFile', {
+                  title: i18n.format('save_md'),
+                  path: fileName,
+                  content: fileContent,
+                })
+              } else {
+                webSaveFile(fileName, fileContent)
+              }
               message.success(i18n.format('createTip'))
               setShowMdOptionsModal(false)
             }

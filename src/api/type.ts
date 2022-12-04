@@ -12,6 +12,7 @@ export type IStoreTodoTree = {
   title?: string
   autoSort?: boolean
   page?: 'plan' | 'schedule'
+  lang?: 'zh-cn' | 'en'
 }
 
 // service type define
@@ -25,14 +26,10 @@ export type Services = {
     string
   >
   GetStore: Pair<{ key: string; path?: string }, any>
-  GetLanguage: Pair<any, any>
   SaveFile: Pair<{ title: string; path: string; content: string }, any>
   SaveFileAs: Pair<{ title: string; name: string; content: string }, any>
   openFile: Pair<any, string>
   reload: Pair<any, any>
-  // temp
-  SetTemp: Pair<{ key: string; value: any }, any>
-  GetTemp: Pair<{ key: string }, any>
   // config
   SetConfig: Pair<{ key: keyof ITodoListConfig; value: any }, any>
   GetConfig: Pair<{ key: keyof ITodoListConfig }, string>

@@ -1,3 +1,5 @@
+import { isTreeNodeJson, TreeNode } from '@/utils'
+import { isInVscode } from '@saber2pr/vscode-webview'
 import {
   Button,
   Collapse,
@@ -8,6 +10,7 @@ import {
   Select,
   Space,
   Typography,
+  Upload,
 } from 'antd'
 import React, { useEffect, useState } from 'react'
 
@@ -30,6 +33,8 @@ export interface SettingsProps {
   onSaveAs: () => Promise<void>
   onParseMd: () => Promise<void>
   onPlay: () => Promise<void>
+  onPaste: (node: TreeNode[]) => void
+  onLangChange(lang: 'zh-cn' | 'en'): void
   initValues?: FormValues
 }
 
@@ -41,6 +46,7 @@ type FormValues = {
   playFontSize?: number
   webhook?: string
   autoSort?: boolean
+  lang?: 'zh-cn' | 'en'
 }
 
 export const SettingsModal: React.FC<SettingsProps> = ({
@@ -52,6 +58,8 @@ export const SettingsModal: React.FC<SettingsProps> = ({
   onSaveAs,
   onParseMd,
   onPlay,
+  onPaste,
+  onLangChange,
 }) => {
   const [form] = Form.useForm()
 
@@ -116,13 +124,32 @@ export const SettingsModal: React.FC<SettingsProps> = ({
         >
           <FormCheckbox />
         </Form.Item>
-        <Form.Item
-          label={i18n.format('display_file')}
-          tooltip={i18n.format('display_file_tip')}
-          name="displayFile"
-        >
-          <SetDisplayFile {...options} />
-        </Form.Item>
+        {isInVscode || (
+          <Form.Item label={i18n.format('language')} name="lang">
+            <Select
+              onSelect={onLangChange}
+              options={[
+                {
+                  value: 'en',
+                  label: 'English',
+                },
+                {
+                  value: 'zh-cn',
+                  label: '简体中文',
+                },
+              ]}
+            />
+          </Form.Item>
+        )}
+        {isInVscode && (
+          <Form.Item
+            label={i18n.format('display_file')}
+            tooltip={i18n.format('display_file_tip')}
+            name="displayFile"
+          >
+            <SetDisplayFile {...options} />
+          </Form.Item>
+        )}
         <Collapse bordered>
           <Collapse.Panel header={i18n.format('advanced')} key="advanced">
             <Form.Item label={i18n.format('autoSort')} name="autoSort">
@@ -143,14 +170,33 @@ export const SettingsModal: React.FC<SettingsProps> = ({
                 addonAfter="px"
               />
             </Form.Item>
-            <Form.Item label={i18n.format('webhook')} name="webhook">
-              <Input type="url" />
-            </Form.Item>
+            {isInVscode && (
+              <Form.Item label={i18n.format('webhook')} name="webhook">
+                <Input type="url" />
+              </Form.Item>
+            )}
           </Collapse.Panel>
         </Collapse>
       </Form>
       <Divider>{i18n.format('more_options')}</Divider>
       <Space split={<Divider type="vertical" />}>
+        {isInVscode || (
+          <Upload
+            beforeUpload={() => false}
+            showUploadList={false}
+            onChange={async event => {
+              const originFileObj = event?.fileList?.[0]?.originFileObj
+              if (originFileObj) {
+                const text = await originFileObj.text()
+                if (isTreeNodeJson(text)) {
+                  onPaste(JSON.parse(text)?.todotree?.tree)
+                }
+              }
+            }}
+          >
+            <Button type="text">{i18n.format('import')}</Button>
+          </Upload>
+        )}
         <Button type="text" onClick={onSaveAs}>
           {i18n.format('save_as')}
         </Button>
@@ -185,6 +231,8 @@ export interface SettingsModalOps {
   onSaveAs: () => Promise<void>
   onParseMd: () => Promise<void>
   onPlay: () => Promise<void>
+  onPaste: (node: TreeNode[]) => void
+  onLangChange?(lang: 'zh-cn' | 'en'): void
   initValues: FormValues
   options: Options
 }
@@ -194,7 +242,9 @@ export const useSettingsModal = (ops: SettingsModalOps) => {
   return {
     modal: (
       <SettingsModal
+        onPaste={ops.onPaste}
         options={ops.options}
+        onLangChange={ops.onLangChange}
         visible={visible}
         onCancel={() => {
           setVisible(false)

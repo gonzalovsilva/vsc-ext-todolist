@@ -7,9 +7,6 @@ import React, { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router'
 import { setLogLevel } from 'webpack-dev-server/client/utils/log'
 
-import { callService } from '@saber2pr/vscode-webview'
-
-import { Services } from '../../src/api/type'
 import { usePage } from './hooks/usePage'
 import { useSettingsStore } from './hooks/useSettingsStore'
 import { i18n } from './i18n'
@@ -27,15 +24,12 @@ export const App = () => {
   const settings = useSettingsStore()
 
   useEffect(() => {
-    callService<Services, 'GetLanguage'>('GetLanguage', null).then(
-      async language => {
-        i18n.setLocal(language)
-        setLanguage(language)
-
-        const page = await settings.get(data => data?.page)
-        pager.goto(page)
-      }
-    )
+    settings.get().then(data => {
+      const lang = data?.lang || 'en'
+      i18n.setLocal(lang)
+      setLanguage(lang)
+      pager.goto(data?.page)
+    })
 
     if (
       APP_ARGS?.colorTheme &&
@@ -47,10 +41,24 @@ export const App = () => {
   }, [])
 
   return (
-    <ConfigProvider locale={language === 'zh-cn' ? zhCN : enUS}>
+    <ConfigProvider locale={language === 'zh-cn' ? zhCN : enUS} key={language}>
       <div className="app" data-theme={APP_ARGS.theme ?? 'light'}>
         <Routes>
-          <Route path="/todo_v2" element={<PageTodoTree />} />
+          <Route
+            path="/todo_v2"
+            element={
+              <PageTodoTree
+                onLangChange={async lang => {
+                  await settings.set(data => {
+                    data.lang = lang
+                    return data
+                  })
+                  i18n.setLocal(lang)
+                  setLanguage(lang)
+                }}
+              />
+            }
+          />
           <Route path="/play" element={<PagePlay />} />
           <Route path="/calendar" element={<PageCalender />} />
         </Routes>

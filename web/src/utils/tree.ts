@@ -4,6 +4,7 @@ import { ITodoItem, ITodoTree } from '../../../src/api/type'
 import { TodoLevels } from '../components'
 import { parseTimeRange } from './date'
 import { getArray } from './getArray'
+import { isJSON } from './is'
 
 export interface TreeNode extends DataNode {
   todo: ITodoItem
@@ -13,6 +14,7 @@ export interface TreeNode extends DataNode {
 
 export const isTreeNodeJson = (node: string) => {
   return (
+    isJSON(node) &&
     /todo/.test(node) &&
     /children/.test(node) &&
     /id/.test(node) &&
