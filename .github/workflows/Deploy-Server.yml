@@ -10,16 +10,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        
-      - name: Build Web
-        run: |
-          cd web
-          yarn
-          yarn build
-      
-      - name: Build App
-        run: |
-          yarn
-      
+
       - name: Deploy
         run: now -c --token ${{secrets.ZEIT_TOKEN}}
