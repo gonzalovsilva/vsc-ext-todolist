@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.14](https://github.com/Saber2pr/vsc-ext-todolist/compare/v0.2.13...v0.2.14) (2022-12-04)
+
+
+### Features
+
+* add web app ([1d4c9d3](https://github.com/Saber2pr/vsc-ext-todolist/commit/1d4c9d399895505492a86fe6fb505cf5e6905776))
+* use copy api ([24144f9](https://github.com/Saber2pr/vsc-ext-todolist/commit/24144f92efd08a473308c617c379773da3b72f08))
+* use copy api ([8118fd8](https://github.com/Saber2pr/vsc-ext-todolist/commit/8118fd8dfb3375f7a01e055fafb6fd330f783d96))
+* web app support ([be0f33a](https://github.com/Saber2pr/vsc-ext-todolist/commit/be0f33a2f161f658927d07e0afd95de97d95361a))
+
 ### [0.2.13](https://github.com/Saber2pr/vsc-ext-todolist/compare/v0.2.2...v0.2.13) (2022-11-26)
 
 
