@@ -68,6 +68,7 @@ import {
 import { parseUrlParam } from '../../utils/parseUrlParam'
 import { ScheduleLink } from './index.style'
 import classnames from 'classnames'
+import { copyer } from '@/utils/copyer'
 
 const { Title } = Typography
 
@@ -191,9 +192,7 @@ export const PageTodoTree = () => {
   }
 
   const pasteNode = async (node: TreeNode) => {
-    const temp: TreeNode[] = await callService<Services, 'GetTemp'>('GetTemp', {
-      key: KEY_TODO_TREE,
-    })
+    const temp: TreeNode[] = await copyer.readTree()
     const tree = cloneTree(temp)
     if (addMode === 'top') {
       insertNodes(node.children, ...tree)

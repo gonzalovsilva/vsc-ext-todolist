@@ -1,22 +1,20 @@
 import Button from 'antd/lib/button'
 import Dropdown from 'antd/lib/dropdown'
 import Menu from 'antd/lib/menu'
+import SubMenu from 'antd/lib/menu/SubMenu'
 import message from 'antd/lib/message'
 import { BaseType } from 'antd/lib/typography/Base'
 import React from 'react'
 
 import { globalState } from '@/state'
+import { copyer } from '@/utils/copyer'
 import MoreOutlined from '@ant-design/icons/MoreOutlined'
-import { callService } from '@saber2pr/vscode-webview'
 
-import { KEY_TODO_TREE } from '../../../../src/constants'
 import { i18n } from '../../i18n'
 import { TreeNode } from '../../utils'
 import { useInputTimeRangeModal } from '../date-setter/input-time-range'
 import { usePromptModal } from '../prompt-modal'
 
-import type { Services } from '../../../../src/api/type'
-import SubMenu from 'antd/lib/menu/SubMenu'
 export const TodoLevels: Record<BaseType | 'default', number> = {
   danger: 0,
   warning: 1,
@@ -39,10 +37,7 @@ export interface OptionsBtnProps {
 }
 
 export const copyNode = async (node: TreeNode) => {
-  await callService<Services, 'SetTemp'>('SetTemp', {
-    key: KEY_TODO_TREE,
-    value: JSON.parse(JSON.stringify([node])),
-  })
+  copyer.copyTree([node])
   message.success(i18n.format('copy_success'))
 }
 
