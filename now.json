@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "name": "vsc-ext-todolist",
+  "builds": [
+    {
+      "src": "web/server/server.js",
+      "use": "@now/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "web/server/server.js"
+    }
+  ]
+}
