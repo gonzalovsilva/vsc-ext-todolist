@@ -19,29 +19,21 @@ export const DEFAULT_FILE_PATH = join(homedir(), FILE_DEFAULT)
 export const FILE_TEMP_PATH = join(homedir(), FILE_TEMP)
 
 export const ServicesHandlers: HandleMap<Services, keyof Services> = {
-  GetStore: ({ key, path = DEFAULT_FILE_PATH }) => {
+  GetStore: async ({ key, path = DEFAULT_FILE_PATH }) => {
     const rc = new RCManager(path)
-    return rc.get(key)
+    const result = await rc.get(key)
+    result.lang = vscode.env.language
+    return result
   },
   Store: async ({ key, value, path = DEFAULT_FILE_PATH }) => {
     const rc = new RCManager(path)
     await rc.set(key, value)
     return path
   },
-  GetLanguage: () => vscode.env.language,
   SaveFile: ({ path, content, title }) =>
     saveWorkspaceFile(title, path, content),
   SaveFileAs: ({ name, content, title }) =>
     saveWorkspaceFileAs(title, name, content),
-  GetTemp: ({ key }) => {
-    const rc = new RCManager(FILE_TEMP_PATH)
-    return rc.get(key)
-  },
-  SetTemp: async ({ key, value }) => {
-    const rc = new RCManager(FILE_TEMP_PATH)
-    await rc.set(key, value)
-    return FILE_TEMP_PATH
-  },
   SetConfig: async ({ key, value }) => {
     const rc = new RCManager(DATA_CONFIG_PATH)
     await rc.set(key, value)

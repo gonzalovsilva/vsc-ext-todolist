@@ -3,7 +3,6 @@ import keycode from 'keycode'
 import React, { useEffect, useState } from 'react'
 
 import { globalState } from '@/state'
-import { isInVscode } from '@saber2pr/vscode-webview'
 
 import { OptionsBtnProps } from '../'
 import { Key } from '../../../../src/api/type'
@@ -39,7 +38,6 @@ export const TodoTree: React.FC<TodoTreeProps> = ({
   }, [globalState.currentSelectKey])
 
   useEffect(() => {
-    if (!isInVscode) return
     if (!onKeydown) return
     const onKeydownHandle = (event: KeyboardEvent) => {
       const key = globalState.currentSelectKey
@@ -67,7 +65,7 @@ export const TodoTree: React.FC<TodoTreeProps> = ({
       titleRender={titleRender}
       expandedKeys={expandedKeys}
       onExpand={onExpand}
-      draggable={isInVscode ? { icon: false } : false}
+      draggable={{ icon: false }}
       blockNode
       showLine={showLine}
       onDrop={treeDrop(treeData, handleDrop)}

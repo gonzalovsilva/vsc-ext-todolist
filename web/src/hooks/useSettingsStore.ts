@@ -20,20 +20,20 @@ export const useSettingsStore = () => {
   }
 
   const setter = async (modify: (val: IStoreTodoTree) => IStoreTodoTree) => {
-    const oldData = await getter(data => data)
-    if (oldData) {
-      const tree = JSON.parse(JSON.stringify(modify(oldData)))
-      await callService<Services, 'Store'>('Store', {
-        key: KEY_TODO_TREE,
-        value: tree,
-        path: APP_ARGS?.file,
-      })
-    }
+    const oldData = await getter()
+    const tree = JSON.parse(JSON.stringify(modify(oldData || ({} as any))))
+    await callService<Services, 'Store'>('Store', {
+      key: KEY_TODO_TREE,
+      value: tree,
+      path: APP_ARGS?.file,
+    })
   }
 
-  const getter = async <T>(selector: (data: IStoreTodoTree) => T) => {
+  const getter = async <T = IStoreTodoTree>(
+    selector?: (data: IStoreTodoTree) => T,
+  ) => {
     const oldData = await loadSource()
-    return selector(oldData)
+    return selector ? selector(oldData) : oldData
   }
 
   return {

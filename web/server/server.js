@@ -1,11 +1,18 @@
 const { join } = require('path')
-const fs = require('fs-extra')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const express = require('express')
 const { RCManager } = require('../../out/store/rc')
-
+const os = require('os')
 const app = express()
+
+const createOutputPath = (file) => {
+  let base = __dirname
+  if (process.env.VERCEL) {
+    base = os.tmpdir()
+  }
+  return join(base, file)
+}
 
 app
   .use(express.static(join(__dirname, '../build')))
@@ -19,17 +26,14 @@ app.post('/api', async (req, res) => {
   console.log(body)
 
   let uid = req.query.uid
-  if (!TODO_REG.test(uid)) uid = 'data'
+  if (!TODO_REG.test(uid) || uid === undefined || uid === 'true') uid = 'data'
 
   const service = body.service
   const params = body.params
 
-  const dataPath = join(__dirname, `${uid}.json`)
+  const dataPath = createOutputPath(`${uid}.json`)
 
   const servicesMock = {
-    GetLanguage: params => {
-      return 'zh-cn'
-    },
     GetStore: ({ key }) => {
       const rc = new RCManager(dataPath)
       return rc.get(key)
