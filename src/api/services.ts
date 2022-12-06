@@ -21,7 +21,7 @@ export const FILE_TEMP_PATH = join(homedir(), FILE_TEMP)
 export const ServicesHandlers: HandleMap<Services, keyof Services> = {
   GetStore: async ({ key, path = DEFAULT_FILE_PATH }) => {
     const rc = new RCManager(path)
-    const result = await rc.get(key)
+    const result = await rc.get(key) || {}
     result.lang = vscode.env.language
     return result
   },
