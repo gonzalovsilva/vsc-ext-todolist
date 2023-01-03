@@ -30,7 +30,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
   nodeKey,
 }) => {
   const [editing, setEditing] = useState(
-    nodeKey === globalState.latestCreateKey,
+    nodeKey === globalState.latestCreateKey
   )
 
   const Tip = useMemo(() => {
@@ -108,6 +108,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
       delete={todo.done}
       type={todo.level === 'default' ? null : todo.level}
       disabled={todo.done ? true : false}
+      style={{ marginBottom: 0 }}
       editable={
         todo.done
           ? false
@@ -128,7 +129,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
                 globalState.blockKeyboard = false
                 globalState.latestCreateKey = null
               },
-              onChange: (value) => {
+              onChange: value => {
                 globalState.blockKeyboard = false
                 globalState.latestCreateKey = null
                 if (todo.content !== value) {

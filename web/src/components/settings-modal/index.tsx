@@ -47,6 +47,7 @@ type FormValues = {
   webhook?: string
   autoSort?: boolean
   lang?: 'zh-cn' | 'en'
+  desc?: string
 }
 
 export const SettingsModal: React.FC<SettingsProps> = ({
@@ -67,12 +68,21 @@ export const SettingsModal: React.FC<SettingsProps> = ({
     form.resetFields()
   }, [
     initValues?.add_mode,
-    initValues?.displayFile,
-    initValues?.playFontSize,
-    initValues?.showLine,
     initValues?.virtual,
+    initValues?.displayFile,
+    initValues?.showLine,
+    initValues?.playFontSize,
     initValues?.webhook,
+    initValues?.autoSort,
+    initValues?.lang,
+    initValues?.desc,
   ])
+
+  useEffect(() => {
+    form.setFieldsValue({
+      desc: initValues?.desc,
+    })
+  }, [initValues?.desc])
 
   return (
     <Modal
@@ -99,6 +109,9 @@ export const SettingsModal: React.FC<SettingsProps> = ({
       }
     >
       <Form form={form} onFinish={onFinish} initialValues={initValues}>
+        <Form.Item label={i18n.format('desc')} name="desc">
+          <Input.TextArea />
+        </Form.Item>
         <Form.Item
           label={i18n.format('create_mode')}
           tooltip={i18n.format('create_mode_tip')}
@@ -184,7 +197,7 @@ export const SettingsModal: React.FC<SettingsProps> = ({
           <Upload
             beforeUpload={() => false}
             showUploadList={false}
-            onChange={async (event) => {
+            onChange={async event => {
               const originFileObj = event?.fileList?.[0]?.originFileObj
               if (originFileObj) {
                 const text = await originFileObj.text()

@@ -75,6 +75,7 @@ export const localeMap = {
     autoSort: 'Auto Sort',
     language: 'Language',
     import: 'Import',
+    desc: 'Description',
   },
   'zh-cn': {
     removeItemTip: '确定删除此待办事项？',
@@ -150,5 +151,6 @@ export const localeMap = {
     autoSort: '自动排序',
     language: '语言',
     import: '导入',
+    desc: '描述',
   },
 }

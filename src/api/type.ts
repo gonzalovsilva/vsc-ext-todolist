@@ -13,6 +13,7 @@ export type IStoreTodoTree = {
   autoSort?: boolean
   page?: 'plan' | 'schedule'
   lang?: 'zh-cn' | 'en'
+  desc?: string
 }
 
 // service type define

@@ -91,7 +91,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
   const updateExpandKeys = (keys: Key[], type: 'push' | 'replace' = 'push') => {
     const expandKeys = getArray(expandKeysRef.current)
     expandKeysRef.current = Array.from(
-      new Set(type === 'push' ? [...expandKeys, ...keys] : keys),
+      new Set(type === 'push' ? [...expandKeys, ...keys] : keys)
     )
     forceUpdate()
   }
@@ -105,7 +105,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
       treeRef.current = autoSort ? sortTree(data.slice()) : data.slice()
     }
     forceUpdate()
-    events.forEach((l) => l())
+    events.forEach(l => l())
   }
 
   const location = useLocation()
@@ -120,13 +120,14 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
   const [autoSort, setAutoSort] = useState<boolean>(false)
   const [playFontSize, setPlayFontSize] = useState<number>(0)
   const [webhook, setWebhook] = useState<string>()
+  const [desc, setDesc] = useState<string>()
   const [lang, setLang] = useState<'zh-cn' | 'en'>('en')
   const [STORE_TITLE, setSTORE_TITLE] = useState<string>()
 
   // for hook message
   useEffect(() => {
     if (webhook) {
-      mockVscodeApi.hook = (message) => axios.post(webhook, message)
+      mockVscodeApi.hook = message => axios.post(webhook, message)
     } else {
       mockVscodeApi.hook = null
     }
@@ -134,14 +135,14 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
 
   // init
   const loadSource = async (
-    callback?: (tree: IStoreTodoTree['tree']) => IStoreTodoTree['tree'],
+    callback?: (tree: IStoreTodoTree['tree']) => IStoreTodoTree['tree']
   ) => {
     setLoaded(false)
     if (isInVscode) {
       // config
       const displayFile = await callService<Services, 'GetDisplayFile'>(
         'GetDisplayFile',
-        null,
+        null
       )
       displayFileRef.current = displayFile
     }
@@ -163,6 +164,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
       setWebhook(val.webhook)
       setSTORE_TITLE(val.title)
       setLang(val.lang || 'en')
+      setDesc(val.desc)
       forceUpdate()
     }
     setLoaded(true)
@@ -183,7 +185,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
         node.todo.pendingDelete = true
         treeRef.current = clearDoneNode(
           treeRef.current,
-          (node) => node.todo.pendingDelete,
+          node => node.todo.pendingDelete
         )
         updateTree()
         globalState.blockKeyboard = false
@@ -239,7 +241,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
       const listener = () => setState({})
       events.push(listener)
       return () => {
-        events = events.filter((l) => l !== listener)
+        events = events.filter(l => l !== listener)
       }
     }, [])
     const todo = node.todo
@@ -253,27 +255,27 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
         updateTree()
       },
       onPaste: pasteNode,
-      onAddLink: (link) => {
+      onAddLink: link => {
         todo.link = link
         updateTree()
       },
-      onAddComment: (tip) => {
+      onAddComment: tip => {
         todo.tip = tip
         updateTree()
       },
-      onCollapseAll: (node) => {
+      onCollapseAll: node => {
         const keys = getTreeKeys(node)
         const keysMap = keys.reduce((acc, k) => ({ ...acc, [k]: k }), {})
         const currentKeys = getArray(expandKeysRef.current)
-        const nextKeys = currentKeys.filter((k) => !keysMap[k])
+        const nextKeys = currentKeys.filter(k => !keysMap[k])
         updateExpandKeys(nextKeys, 'replace')
       },
-      onExpandAll: (node) => {
+      onExpandAll: node => {
         const keys = getTreeKeys(node)
         updateExpandKeys(keys, 'push')
       },
       onDelete: () => deleteNode(node),
-      onDateRangeSet: (date) => {
+      onDateRangeSet: date => {
         todo.date = date
         updateTree()
       },
@@ -287,7 +289,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
             readOnly
             title={todo.content}
             date={todo.date}
-            onChange={(date) => {}}
+            onChange={date => {}}
           />
           <Button
             size="small"
@@ -306,7 +308,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
           <DateSetter
             title={todo.content}
             date={todo.date}
-            onChange={(date) => {
+            onChange={date => {
               todo.date = date
               updateTree()
             }}
@@ -315,11 +317,11 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
             bordered={false}
             size="small"
             value={todo.level}
-            onSelect={(level) => {
+            onSelect={level => {
               todo.level = level
               updateTree()
             }}
-            options={Object.keys(TodoLevels).map((level) => ({
+            options={Object.keys(TodoLevels).map(level => ({
               label: `P${TodoLevels[level]}`,
               value: level,
             }))}
@@ -391,7 +393,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
         getContainer(),
         anchor.key,
         node,
-        addMode === 'bottom' ? 'after' : 'before',
+        addMode === 'bottom' ? 'after' : 'before'
       )
     } else {
       if (addMode === 'top') {
@@ -427,6 +429,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
       title: TITLE,
       autoSort,
       lang,
+      desc,
     }
     const tree = JSON.parse(JSON.stringify(storeVal))
     await callService<Services, 'Store'>('Store', {
@@ -467,11 +470,12 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
     playFontSize,
     webhook,
     lang,
+    desc,
   ])
 
   const percent = useMemo(
     () => calcProgressV2(treeRef.current),
-    [treeRef.current],
+    [treeRef.current]
   )
 
   let TITLE = params?.name ?? STORE_TITLE ?? 'Todo List'
@@ -499,6 +503,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
       playFontSize,
       webhook,
       lang,
+      desc,
     },
     async onFinish(values) {
       const isChangeDisplay = values?.displayFile !== displayFileRef.current
@@ -516,6 +521,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
       setPlayFontSize(values?.playFontSize || DEFAULT_PLAYFONTSIZE)
       setWebhook(values?.webhook)
       setLang(values?.lang)
+      setDesc(values?.desc)
       message.success(i18n.format('settingTip'))
       setVisible(false)
       globalState.blockKeyboard = false
@@ -557,6 +563,15 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
           <Title level={4} style={{ marginBottom: 0 }}>
             {TITLE}
           </Title>
+          {desc && (
+            <Typography.Paragraph
+              editable={{
+                onChange: value => value !== desc && setDesc(value),
+              }}
+            >
+              {desc}
+            </Typography.Paragraph>
+          )}
           <Progress percent={percent} />
           <ScheduleLink>
             <Navigator />
@@ -574,8 +589,8 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
                 virtualMode={virtualMode}
                 titleRender={(node: TreeNode) => <Item node={node} />}
                 expandedKeys={expandKeysRef.current}
-                onExpand={(keys) => updateExpandKeys(keys, 'replace')}
-                handleDrop={(data) => {
+                onExpand={keys => updateExpandKeys(keys, 'replace')}
+                handleDrop={data => {
                   treeRef.current = data
                   updateTree()
                 }}
@@ -636,7 +651,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
                 onConfirm={() => {
                   treeRef.current = clearDoneNode(
                     treeRef.current,
-                    (node) => node.todo.done,
+                    node => node.todo.done
                   )
                   updateTree()
                 }}
@@ -682,7 +697,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
         <MdOptionModal
           visible={showMdOptionsModal}
           onCancel={() => setShowMdOptionsModal(false)}
-          onOk={async (values) => {
+          onOk={async values => {
             const tree = treeRef.current
             if (tree) {
               const fileName = `${TITLE}.md`
