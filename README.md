@@ -4,8 +4,6 @@
 
 ---
 
-[![Version for VS Code Extension](https://vsmarketplacebadge.apphb.com/version-short/saber2pr.todolist.svg?logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=saber2pr.todolist) [![Installs](https://vsmarketplacebadge.apphb.com/installs/saber2pr.todolist.svg)](https://marketplace.visualstudio.com/items?itemName=saber2pr.todolist) [![Rating](https://vsmarketplacebadge.apphb.com/rating/saber2pr.todolist.svg)](https://marketplace.visualstudio.com/items?itemName=saber2pr.todolist)
-
 TodoList TreeView Editor. Check your todo list with a `TreeView` !
 
 Show Todo `Progress%` in a StatusBar:
