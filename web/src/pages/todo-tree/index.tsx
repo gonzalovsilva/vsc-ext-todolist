@@ -67,6 +67,7 @@ import {
   insertNodeSibling,
   sortTree,
   TreeNode,
+  checkTreeSetTime,
 } from '../../utils'
 import { parseUrlParam } from '../../utils/parseUrlParam'
 import { ScheduleLink } from './index.style'
@@ -553,6 +554,11 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
     onLangChange,
   })
 
+  const treeSetTime = useMemo(
+    () => checkTreeSetTime(getArray(treeRef.current)),
+    [treeRef.current]
+  )
+
   return (
     <div className="PageTodoList">
       <div className="layout">
@@ -573,9 +579,11 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
             </Typography.Paragraph>
           )}
           <Progress percent={percent} />
-          <ScheduleLink>
-            <Navigator />
-          </ScheduleLink>
+          {treeSetTime && (
+            <ScheduleLink>
+              <Navigator />
+            </ScheduleLink>
+          )}
         </Space>
         <Divider style={{ marginTop: 0 }} />
         <div className="tree-wrapper">

@@ -35,13 +35,14 @@ export const getTreeKeys = (...tree: TreeNode[]) => {
 
 export const findNode = (
   treeNode: TreeNode[],
-  key: number | string,
+  key: number | string | ((node: TreeNode) => boolean),
 ): TreeNode => {
   if (!(treeNode?.length > 0)) return
   const stack = Array.isArray(treeNode) ? treeNode.slice() : []
   while (stack.length) {
     const node = stack.pop()
-    if (node.key === key) return node
+    const checked = typeof key === 'function' ? key(node) : node.key === key
+    if (checked) return node
     stack.push(...node.children)
   }
 }
@@ -214,4 +215,8 @@ export const countTreeSize = (treeNode: TreeNode[]): number => {
     stack.push(...node.children)
   }
   return size
+}
+
+export const checkTreeSetTime = (treeNode: TreeNode[]) => {
+  return !!findNode(treeNode, node => !!node?.todo?.date)
 }
