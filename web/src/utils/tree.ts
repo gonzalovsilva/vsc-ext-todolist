@@ -26,7 +26,7 @@ export const isTreeNodeJson = (node: string) => {
 
 export const getTreeKeys = (...tree: TreeNode[]) => {
   const keys = []
-  mapTree(tree, (node) => {
+  mapTree(tree, node => {
     node.key && keys.push(node.key)
     return node
   })
@@ -35,7 +35,7 @@ export const getTreeKeys = (...tree: TreeNode[]) => {
 
 export const findNode = (
   treeNode: TreeNode[],
-  key: number | string | ((node: TreeNode) => boolean),
+  key: number | string | ((node: TreeNode) => boolean)
 ): TreeNode => {
   if (!(treeNode?.length > 0)) return
   const stack = Array.isArray(treeNode) ? treeNode.slice() : []
@@ -49,7 +49,7 @@ export const findNode = (
 
 export const findNodes = (
   treeNode: TreeNode[],
-  finder: (item: TreeNode) => boolean,
+  finder: (item: TreeNode) => boolean
 ): TreeNode[] => {
   const result: TreeNode[] = []
 
@@ -67,13 +67,13 @@ export const findNodes = (
 
 export const findNodeParent = (
   treeNode: TreeNode[],
-  key: number | string,
+  key: number | string
 ): TreeNode => {
   if (!(treeNode?.length > 0)) return
   const stack = Array.isArray(treeNode) ? treeNode.slice() : []
   while (stack.length) {
     const node = stack.pop()
-    const hasChild = getArray(node.children).find((item) => item.key == key)
+    const hasChild = getArray(node.children).find(item => item.key == key)
     if (hasChild) return node
     stack.push(...node.children)
   }
@@ -83,9 +83,9 @@ export const insertNodeSibling = (
   container: TreeNode[],
   key: number | string,
   newNode: TreeNode,
-  pos: 'before' | 'after' = 'after',
+  pos: 'before' | 'after' = 'after'
 ) => {
-  const index = getArray(container).findIndex((item) => item.key == key)
+  const index = getArray(container).findIndex(item => item.key == key)
   if (index === -1) {
     container.push(newNode)
   } else {
@@ -112,7 +112,7 @@ export const removeNode = (container: TreeNode[], node: TreeNode) => {
 }
 export const clearDoneNode = (
   treeNode: TreeNode[],
-  isRemove: (node: TreeNode) => boolean,
+  isRemove: (node: TreeNode) => boolean
 ) => {
   if (!(treeNode?.length > 0)) return []
   const nextTree: TreeNode[] = []
@@ -132,7 +132,7 @@ export interface TreeLike {
 
 export const mapTree = <N extends TreeLike, T extends TreeLike>(
   treeNode: N[],
-  mapFunc: (node: N) => T,
+  mapFunc: (node: N) => T
 ) => {
   if (!(treeNode?.length > 0)) return []
   const nextTree: T[] = []
@@ -147,7 +147,7 @@ export const mapTree = <N extends TreeLike, T extends TreeLike>(
 export const cloneTree = (tree: TreeNode[]) => {
   let i = 0
   const start = Date.now()
-  return mapTree(tree, (n) => {
+  return mapTree(tree, n => {
     const newNode = { ...n }
     i++
     newNode.key = start + i
@@ -219,4 +219,26 @@ export const countTreeSize = (treeNode: TreeNode[]): number => {
 
 export const checkTreeSetTime = (treeNode: TreeNode[]) => {
   return !!findNode(treeNode, node => !!node?.todo?.date)
+}
+
+export const checkTreeSet = (
+  treeNode: TreeNode[],
+  keys: (keyof ITodoItem)[]
+) => {
+  const result = keys.reduce((acc, key) => ({ ...acc, [key]: false }), {})
+  findNode(treeNode, node => {
+    const todo = node?.todo
+    if (todo) {
+      let finish = false
+      for (const key in result) {
+        result[key] = !!todo[key]
+        finish = finish && result[key]
+      }
+      // break
+      if (finish) {
+        return true
+      }
+    }
+  })
+  return result
 }

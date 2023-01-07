@@ -100,6 +100,11 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
   const treeRef = useRef<TreeNode[]>([])
   const displayFileRef = useRef<string>(null)
 
+  const treeSetTime = useMemo(
+    () => checkTreeSetTime(getArray(treeRef.current)),
+    [treeRef.current]
+  )
+
   const updateTree = () => {
     const data = treeRef.current
     if (Array.isArray(data)) {
@@ -306,14 +311,16 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
     } else {
       ops = (
         <>
-          <DateSetter
-            title={todo.content}
-            date={todo.date}
-            onChange={date => {
-              todo.date = date
-              updateTree()
-            }}
-          />
+          {treeSetTime && (
+            <DateSetter
+              title={todo.content}
+              date={todo.date}
+              onChange={date => {
+                todo.date = date
+                updateTree()
+              }}
+            />
+          )}
           <Select
             bordered={false}
             size="small"
@@ -553,11 +560,6 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
     onPaste: pasteCopiedTree,
     onLangChange,
   })
-
-  const treeSetTime = useMemo(
-    () => checkTreeSetTime(getArray(treeRef.current)),
-    [treeRef.current]
-  )
 
   return (
     <div className="PageTodoList">
