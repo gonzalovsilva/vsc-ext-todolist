@@ -13,6 +13,8 @@ import { callService, isInVscode } from '@saber2pr/vscode-webview'
 import type { ITodoItem, Services } from '../../../../src/api/type'
 import { i18n } from '@/i18n'
 import { copyer } from '@/utils/copyer'
+import Markdown from 'react-markdown'
+
 const { Text } = Typography
 
 export interface TodoItemProps {
@@ -36,7 +38,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({
   const Tip = useMemo(() => {
     const tip = todo?.tip
     if (tip) {
-      return <Tooltip title={tip}>{TipIcon}</Tooltip>
+      return <Tooltip title={<Markdown>{tip}</Markdown>}>{TipIcon}</Tooltip>
     }
     return <></>
   }, [todo?.tip])

@@ -71,6 +71,7 @@ import {
 } from '../../utils'
 import { parseUrlParam } from '../../utils/parseUrlParam'
 import { ScheduleLink } from './index.style'
+import Markdown from 'react-markdown'
 
 const { Title } = Typography
 
@@ -571,15 +572,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
           <Title level={4} style={{ marginBottom: 0 }}>
             {TITLE}
           </Title>
-          {desc && (
-            <Typography.Paragraph
-              editable={{
-                onChange: value => value !== desc && setDesc(value),
-              }}
-            >
-              {desc}
-            </Typography.Paragraph>
-          )}
+          {desc && <Markdown>{desc}</Markdown>}
           <Progress percent={percent} />
           {treeSetTime && (
             <ScheduleLink>
