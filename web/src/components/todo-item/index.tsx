@@ -14,6 +14,7 @@ import type { ITodoItem, Services } from '../../../../src/api/type'
 import { i18n } from '@/i18n'
 import { copyer } from '@/utils/copyer'
 import Markdown from 'react-markdown'
+import gfm from 'remark-gfm'
 
 const { Text } = Typography
 
@@ -38,7 +39,11 @@ export const TodoItem: React.FC<TodoItemProps> = ({
   const Tip = useMemo(() => {
     const tip = todo?.tip
     if (tip) {
-      return <Tooltip title={<Markdown>{tip}</Markdown>}>{TipIcon}</Tooltip>
+      return (
+        <Tooltip title={<Markdown remarkPlugins={[gfm]}>{tip}</Markdown>}>
+          {TipIcon}
+        </Tooltip>
+      )
     }
     return <></>
   }, [todo?.tip])

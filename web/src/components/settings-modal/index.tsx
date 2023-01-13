@@ -110,7 +110,7 @@ export const SettingsModal: React.FC<SettingsProps> = ({
     >
       <Form form={form} onFinish={onFinish} initialValues={initValues}>
         <Form.Item label={i18n.format('desc')} name="desc">
-          <Input.TextArea />
+          <Input.TextArea autoSize={{ maxRows: 10 }} />
         </Form.Item>
         <Form.Item
           label={i18n.format('create_mode')}
