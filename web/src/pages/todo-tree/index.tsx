@@ -72,6 +72,7 @@ import {
 import { parseUrlParam } from '../../utils/parseUrlParam'
 import { ScheduleLink } from './index.style'
 import Markdown from 'react-markdown'
+import gfm from 'remark-gfm'
 
 const { Title } = Typography
 
@@ -572,7 +573,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
           <Title level={4} style={{ marginBottom: 0 }}>
             {TITLE}
           </Title>
-          {desc && <Markdown>{desc}</Markdown>}
+          {desc && <Markdown remarkPlugins={[gfm]}>{desc}</Markdown>}
           <Progress percent={percent} />
           {treeSetTime && (
             <ScheduleLink>
