@@ -14,3 +14,10 @@ export const isJSON = (str: string) => {
     return false
   }
 }
+
+export const isUndefined = (val: any): val is undefined =>
+  typeof val === 'undefined'
+
+export const isNull = (val: any): val is null => val === null
+
+export const isNullOrUndefined = (val: any) => isNull(val) || isUndefined(val)
