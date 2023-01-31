@@ -11,6 +11,7 @@ export type IStoreTodoTree = {
   webhook?: string
   title?: string
   autoSort?: boolean
+  showEndTime?: boolean
   page?: 'plan' | 'schedule'
   lang?: 'zh-cn' | 'en'
   desc?: string
@@ -52,6 +53,8 @@ export type ITodoItem = {
   date?: string // start,end
   tip?: string
   focus?: boolean
+  start?: number
+  end?: number
 }
 
 export type ITodoTree = {

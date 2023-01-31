@@ -73,6 +73,7 @@ import { parseUrlParam } from '../../utils/parseUrlParam'
 import { ScheduleLink } from './index.style'
 import Markdown from 'react-markdown'
 import gfm from 'remark-gfm'
+import { EndTime } from '@/components/end-time'
 
 const { Title } = Typography
 
@@ -126,6 +127,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
   const [virtualMode, setVirtual] = useState<boolean>(false)
   const [showLine, setShowLine] = useState<boolean>(false)
   const [autoSort, setAutoSort] = useState<boolean>(false)
+  const [showEndTime, setShowEndTime] = useState<boolean>(false)
   const [playFontSize, setPlayFontSize] = useState<number>(0)
   const [webhook, setWebhook] = useState<string>()
   const [desc, setDesc] = useState<string>()
@@ -168,6 +170,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
       setVirtual(!!val.virtual)
       setShowLine(!!val.showLine)
       setAutoSort(!!val.autoSort)
+      setShowEndTime(!!val.showEndTime)
       setPlayFontSize(val.playFontSize || DEFAULT_PLAYFONTSIZE)
       setWebhook(val.webhook)
       setSTORE_TITLE(val.title)
@@ -299,6 +302,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
             date={todo.date}
             onChange={date => {}}
           />
+          {showEndTime && <EndTime todo={todo} />}
           <Button
             size="small"
             type="text"
@@ -349,6 +353,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
             onClick={() => {
               todo.done = true
               todo.focus = false
+              todo.end = Date.now()
               updateTree()
             }}
           />
@@ -390,6 +395,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
         id: key,
         level: 'default',
         done: false,
+        start: Date.now(),
       },
       toJSON: () => ({
         key: node.key,
@@ -438,6 +444,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
       webhook: webhook,
       title: TITLE,
       autoSort,
+      showEndTime,
       lang,
       desc,
     }
@@ -477,6 +484,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
     virtualMode,
     showLine,
     autoSort,
+    showEndTime,
     playFontSize,
     webhook,
     lang,
@@ -510,6 +518,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
       displayFile: displayFileRef.current,
       showLine,
       autoSort,
+      showEndTime,
       playFontSize,
       webhook,
       lang,
@@ -528,6 +537,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
       setVirtual(!!values?.virtual)
       setShowLine(!!values?.showLine)
       setAutoSort(!!values?.autoSort)
+      setShowEndTime(!!values?.showEndTime)
       setPlayFontSize(values?.playFontSize || DEFAULT_PLAYFONTSIZE)
       setWebhook(values?.webhook)
       setLang(values?.lang)

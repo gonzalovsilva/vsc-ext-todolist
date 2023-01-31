@@ -76,6 +76,8 @@ export const localeMap = {
     language: 'Language',
     import: 'Import',
     desc: 'Description',
+    showEndTime: 'Show EndTime',
+    endAt: 'Done At',
   },
   'zh-cn': {
     removeItemTip: '确定删除此待办事项？',
@@ -152,5 +154,7 @@ export const localeMap = {
     language: '语言',
     import: '导入',
     desc: '描述',
+    showEndTime: '显示结束时间',
+    endAt: '结束于',
   },
 }

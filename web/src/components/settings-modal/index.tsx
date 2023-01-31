@@ -46,6 +46,7 @@ type FormValues = {
   playFontSize?: number
   webhook?: string
   autoSort?: boolean
+  showEndTime?: boolean
   lang?: 'zh-cn' | 'en'
   desc?: string
 }
@@ -74,6 +75,7 @@ export const SettingsModal: React.FC<SettingsProps> = ({
     initValues?.playFontSize,
     initValues?.webhook,
     initValues?.autoSort,
+    initValues?.showEndTime,
     initValues?.lang,
     initValues?.desc,
   ])
@@ -166,6 +168,9 @@ export const SettingsModal: React.FC<SettingsProps> = ({
         <Collapse bordered>
           <Collapse.Panel header={i18n.format('advanced')} key="advanced">
             <Form.Item label={i18n.format('autoSort')} name="autoSort">
+              <FormCheckbox />
+            </Form.Item>
+            <Form.Item label={i18n.format('showEndTime')} name="showEndTime">
               <FormCheckbox />
             </Form.Item>
             <Form.Item label={i18n.format('showLine')} name="showLine">
