@@ -10,7 +10,7 @@ export interface EndTimeProps {
 }
 
 export const EndTime: React.FC<EndTimeProps> = ({ todo }) => {
-  if (!todo.end) return <></>
+  if (!todo.end || !todo.start) return <></>
   return (
     <Tooltip
       title={`${i18n.format('startAt')}: ${moment(todo.start).format(
