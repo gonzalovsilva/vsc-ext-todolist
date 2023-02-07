@@ -8,16 +8,6 @@ export const copyer = {
   read() {
     return navigator.clipboard.readText()
   },
-  async readLines() {
-    const text = await navigator.clipboard.readText()
-    if (text) {
-      return text
-        .split(/\r?\n/)
-        .map(line => line.trim())
-        .filter(Boolean)
-    }
-    return []
-  },
   copyTree(tree: TreeNode[]) {
     copyer.copy(JSON.stringify(tree))
   },
