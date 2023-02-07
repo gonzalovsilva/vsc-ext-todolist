@@ -80,7 +80,6 @@ export const localeMap = {
     endAt: 'Done At',
     startAt: 'Start At',
     duration: 'Duration',
-    pasteFormat: 'Paste Lines',
   },
   'zh-cn': {
     removeItemTip: '确定删除此待办事项？',
@@ -161,6 +160,5 @@ export const localeMap = {
     endAt: '结束于',
     startAt: '开始于',
     duration: '时长',
-    pasteFormat: '多行粘贴',
   },
 }

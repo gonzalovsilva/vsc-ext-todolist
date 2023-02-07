@@ -25,8 +25,12 @@ export const copyer = {
     const text = await copyer.read()
     if (isTreeNodeJson(text)) {
       return JSON.parse(text) as TreeNode[]
-    } else {
-      return [createTreeNode(text)]
+    } else if (text) {
+      const lines = text
+        .split(/\r?\n/)
+        .map(line => line.trim())
+        .filter(Boolean)
+      return lines.map((line, i) => createTreeNode(line, Date.now() + i))
     }
   },
 }

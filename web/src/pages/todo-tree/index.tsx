@@ -226,21 +226,6 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
     updateExpandKeys([node.key], 'push')
   }
 
-  const pasteLinesNode = async (node: TreeNode) => {
-    const temp: string[] = await copyer.readLines()
-
-    const tree = getArray(temp).map((content, i) =>
-      createTreeNode(content, Date.now() + i)
-    )
-    if (addMode === 'top') {
-      insertNodes(node.children, ...tree)
-    } else {
-      appendNodes(node.children, ...tree)
-    }
-    updateTree()
-    updateExpandKeys([node.key], 'push')
-  }
-
   const pasteCopiedTree = (copyTree: TreeNode[]) => {
     const current = getArray(treeRef.current)
     const newNodes = getArray(copyTree)
@@ -282,7 +267,6 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
         updateTree()
       },
       onPaste: pasteNode,
-      onPasteFormat: pasteLinesNode,
       onAddLink: link => {
         todo.link = link
         updateTree()
