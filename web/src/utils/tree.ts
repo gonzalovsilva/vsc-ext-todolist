@@ -242,3 +242,23 @@ export const checkTreeSet = (
   })
   return result
 }
+
+export const createTreeNode = (content = '', key = Date.now()) => {
+  const newNode: TreeNode = {
+    key,
+    children: [],
+    todo: {
+      content,
+      id: key,
+      level: 'default',
+      done: false,
+      start: Date.now(),
+    },
+    toJSON: () => ({
+      key: newNode.key,
+      children: newNode.children,
+      todo: newNode.todo,
+    }),
+  }
+  return newNode
+}

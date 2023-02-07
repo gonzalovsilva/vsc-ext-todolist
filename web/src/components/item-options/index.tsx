@@ -26,6 +26,7 @@ export const TodoLevels: Record<BaseType | 'default', number> = {
 export interface OptionsBtnProps {
   node: TreeNode
   onPaste: (node: TreeNode) => void
+  onPasteFormat: (node: TreeNode) => void
   onAddLink: (link: string) => void
   onAddComment: (comment: string) => void
   onExpandAll: (node: TreeNode) => void
@@ -43,6 +44,7 @@ export const copyNode = async (node: TreeNode) => {
 
 export const useCreateItemMenu = ({
   onPaste,
+  onPasteFormat,
   onAddLink,
   node,
   onCollapseAll,
@@ -54,7 +56,7 @@ export const useCreateItemMenu = ({
 }: OptionsBtnProps) => {
   const { modal: AddLinkModal, setVisible: setAddLinkVisible } = usePromptModal(
     {
-      onOk: (value) => {
+      onOk: value => {
         onAddLink(value)
         globalState.blockKeyboard = false
       },
@@ -64,12 +66,12 @@ export const useCreateItemMenu = ({
       onCancel: () => {
         globalState.blockKeyboard = false
       },
-    },
+    }
   )
 
   const { modal: AddCommentModal, setVisible: setAddCommentVisible } =
     usePromptModal({
-      onOk: (value) => {
+      onOk: value => {
         onAddComment(value)
         globalState.blockKeyboard = false
       },
@@ -133,6 +135,9 @@ export const useCreateItemMenu = ({
         <Menu.Item onClick={() => setInputTimeRangeModalVisible(true)}>
           {i18n.format('setTimeRange')}
         </Menu.Item>
+        <Menu.Item onClick={() => onPasteFormat(node)}>
+          {i18n.format('pasteFormat')}
+        </Menu.Item>
       </SubMenu>
       {AddLinkModal}
       {AddCommentModal}
@@ -140,7 +145,7 @@ export const useCreateItemMenu = ({
     </Menu>
   )
 }
-export const ItemOptions: React.FC<OptionsBtnProps> = (props) => {
+export const ItemOptions: React.FC<OptionsBtnProps> = props => {
   const menu = useCreateItemMenu(props)
   return (
     <Dropdown trigger={['click']} overlay={menu}>
