@@ -1,5 +1,5 @@
 import clipboard from 'clipboard'
-import { isTreeNodeJson, TreeNode } from './tree'
+import { createTreeNode, isTreeNodeJson, TreeNode } from './tree'
 
 export const copyer = {
   copy(text: string) {
@@ -25,6 +25,8 @@ export const copyer = {
     const text = await copyer.read()
     if (isTreeNodeJson(text)) {
       return JSON.parse(text) as TreeNode[]
+    } else {
+      return [createTreeNode(text)]
     }
   },
 }
