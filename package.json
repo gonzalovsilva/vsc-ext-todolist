@@ -62,7 +62,7 @@
 		"vscode:prepublish": "yarn run compile",
 		"compile": "tsc -p ./ && cd web && yarn build",
 		"watch": "tsc -watch -p ./",
-		"build": "cd web && yarn build && cd .. && vsce package",
+		"build": "vsce package",
 		"release": "standard-version",
 		"lint": "prettier --write ./src",
 		"prepare": "husky install",
