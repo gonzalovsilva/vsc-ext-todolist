@@ -218,6 +218,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
     const text = await copyer.read()
     if (/^https?:/.test(text)) {
       node.todo.link = text.trim()
+      updateTree()
       return
     }
     const temp: TreeNode[] = await copyer.readTree()
