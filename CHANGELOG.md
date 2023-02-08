@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.23](https://github.com/Saber2pr/vsc-ext-todolist/compare/v0.2.22...v0.2.23) (2023-02-08)
+
+
+### Features
+
+* copy add link ([c153617](https://github.com/Saber2pr/vsc-ext-todolist/commit/c1536178ebe800016af6f5ed06234ac2dacafc21))
+* paste lines ([8291040](https://github.com/Saber2pr/vsc-ext-todolist/commit/8291040e72b2ef3a13ce7d63b9eb3e536a52d3e4))
+* paste text ([43273e5](https://github.com/Saber2pr/vsc-ext-todolist/commit/43273e59e25d8213878457c40e429c692fa48079))
+* show end time ([2325fab](https://github.com/Saber2pr/vsc-ext-todolist/commit/2325fabe2bcc814d4d6b179db6554563b6dd96f0))
+* startAt ([9642e19](https://github.com/Saber2pr/vsc-ext-todolist/commit/9642e19b9c6827e5dae0d4141371b946887670db))
+* version control ([05c4dd9](https://github.com/Saber2pr/vsc-ext-todolist/commit/05c4dd94515b7486dcc159ec4675e2361dfaab39))
+
 ### [0.2.22](https://github.com/Saber2pr/vsc-ext-todolist/compare/v0.2.21...v0.2.22) (2023-01-13)
 
 ### [0.2.21](https://github.com/Saber2pr/vsc-ext-todolist/compare/v0.2.20...v0.2.21) (2023-01-13)
