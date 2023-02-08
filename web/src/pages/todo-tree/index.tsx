@@ -439,6 +439,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
       const isUseDiskVersion = await new Promise(resolve => {
         Modal.confirm({
           title: i18n.format('version'),
+          content: i18n.format('versionDiff'),
           okText: i18n.format('versionContinue2'),
           cancelText: i18n.format('versionContinue'),
           onOk() {
