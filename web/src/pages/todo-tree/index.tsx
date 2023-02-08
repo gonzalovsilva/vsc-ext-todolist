@@ -75,6 +75,7 @@ import { ScheduleLink } from './index.style'
 import Markdown from 'react-markdown'
 import gfm from 'remark-gfm'
 import { EndTime } from '@/components/end-time'
+import { isNullOrUndefined } from '@/utils/is'
 
 const { Title } = Typography
 
@@ -134,6 +135,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
   const [desc, setDesc] = useState<string>()
   const [lang, setLang] = useState<'zh-cn' | 'en'>('en')
   const [STORE_TITLE, setSTORE_TITLE] = useState<string>()
+  const [version, setVersion] = useState<string>()
 
   // for hook message
   useEffect(() => {
@@ -177,6 +179,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
       setSTORE_TITLE(val.title)
       setLang(val.lang || 'en')
       setDesc(val.desc)
+      setVersion(val.version)
       forceUpdate()
     }
     setLoaded(true)
@@ -424,6 +427,36 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
 
   const save = async () => {
     nprogress.start()
+    const oldTodo = await callService<Services, 'GetStore'>('GetStore', {
+      key: KEY_TODO_TREE,
+      path: params?.file,
+    })
+    const oldVersion = oldTodo.version
+    const isSameVersion = isNullOrUndefined(oldVersion)
+      ? true
+      : oldVersion === version
+    if (!isSameVersion) {
+      const isUseDiskVersion = await new Promise(resolve => {
+        Modal.confirm({
+          title: i18n.format('version'),
+          okText: i18n.format('versionContinue2'),
+          cancelText: i18n.format('versionContinue'),
+          onOk() {
+            resolve(true)
+          },
+          onCancel() {
+            resolve(false)
+          },
+        })
+      })
+      if (isUseDiskVersion) {
+        isMounted.current = false
+        await loadSource()
+        message.success(i18n.format('updateTip'))
+        return
+      }
+    }
+
     const storeVal: IStoreTodoTree = {
       tree: treeRef.current,
       expandKeys: expandKeysRef.current,
@@ -439,8 +472,10 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
       showEndTime,
       lang,
       desc,
+      version: `${Date.now()}`,
     }
     const tree = JSON.parse(JSON.stringify(storeVal))
+    setVersion(storeVal.version)
     await callService<Services, 'Store'>('Store', {
       key: KEY_TODO_TREE,
       value: tree,

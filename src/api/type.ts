@@ -15,6 +15,7 @@ export type IStoreTodoTree = {
   page?: 'plan' | 'schedule'
   lang?: 'zh-cn' | 'en'
   desc?: string
+  version?: string
 }
 
 // service type define
@@ -27,7 +28,7 @@ export type Services = {
     },
     string
   >
-  GetStore: Pair<{ key: string; path?: string }, any>
+  GetStore: Pair<{ key: string; path?: string }, IStoreTodoTree>
   SaveFile: Pair<{ title: string; path: string; content: string }, any>
   SaveFileAs: Pair<{ title: string; name: string; content: string }, any>
   openFile: Pair<any, string>

@@ -80,6 +80,10 @@ export const localeMap = {
     endAt: 'Done At',
     startAt: 'Start At',
     duration: 'Duration',
+    version: 'Version Diff',
+    versionDiff: 'Inconsistency with disk version detected',
+    versionContinue: 'Overwrite',
+    versionContinue2: 'Use Disk-Version',
   },
   'zh-cn': {
     removeItemTip: '确定删除此待办事项？',
@@ -160,5 +164,9 @@ export const localeMap = {
     endAt: '结束于',
     startAt: '开始于',
     duration: '时长',
+    version: '版本对比',
+    versionDiff: '检测到和磁盘版本不一致',
+    versionContinue: '覆盖更新',
+    versionContinue2: '更新为磁盘版本',
   },
 }
