@@ -215,6 +215,11 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
   }
 
   const pasteNode = async (node: TreeNode) => {
+    const text = await copyer.read()
+    if (/^https?:/.test(text)) {
+      node.todo.link = text.trim()
+      return
+    }
     const temp: TreeNode[] = await copyer.readTree()
     const tree = cloneTree(temp)
     if (addMode === 'top') {
