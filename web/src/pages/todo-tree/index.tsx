@@ -454,6 +454,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
         isMounted.current = false
         await loadSource()
         message.success(i18n.format('updateTip'))
+        nprogress.done()
         return
       }
     }
