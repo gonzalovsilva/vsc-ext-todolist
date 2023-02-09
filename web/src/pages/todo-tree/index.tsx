@@ -711,6 +711,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
                   message.success(i18n.format('updateTip'))
                 }}
                 onSort={async () => {
+                  isMounted.current = false
                   await loadSource(sortTree)
                   message.success(i18n.format('sort_tip'))
                 }}
