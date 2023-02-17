@@ -197,7 +197,7 @@ export const SettingsModal: React.FC<SettingsProps> = ({
         </Collapse>
       </Form>
       <Divider>{i18n.format('more_options')}</Divider>
-      <Space split={<Divider type="vertical" />}>
+      <Space split={<Divider type="vertical" />} style={{ flexWrap: 'wrap' }}>
         {isInVscode || (
           <Upload
             beforeUpload={() => false}

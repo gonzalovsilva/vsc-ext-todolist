@@ -262,3 +262,23 @@ export const createTreeNode = (content = '', key = Date.now()) => {
   }
   return newNode
 }
+
+export const collectTreeNodes = (
+  treeNode: TreeNode[],
+  filter: (node: TreeNode) => boolean
+): TreeNode[] => {
+  const result: TreeNode[] = []
+  if (!(treeNode?.length > 0)) return result
+  const stack = Array.isArray(treeNode) ? treeNode.slice() : []
+  while (stack.length) {
+    const node = stack.pop()
+    if (filter(node)) {
+      result.push({
+        ...node,
+        children: [],
+      })
+    }
+    stack.push(...node.children)
+  }
+  return result
+}

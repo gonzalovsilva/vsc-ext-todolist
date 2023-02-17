@@ -17,7 +17,8 @@ export interface TodoTreeProps {
   treeData: TreeNode[]
   handleDrop: (newTree: TreeNode[]) => void
   itemOptions: OptionsBtnProps
-  onKeydown?(key: string, node: TreeNode, event: KeyboardEvent): void
+  onNodeKeydown?(key: string, node: TreeNode, event: KeyboardEvent): void
+  onKeydown?(key: string, event: KeyboardEvent): void
 }
 
 export const TodoTree: React.FC<TodoTreeProps> = ({
@@ -29,6 +30,7 @@ export const TodoTree: React.FC<TodoTreeProps> = ({
   treeData,
   handleDrop,
   itemOptions,
+  onNodeKeydown,
   onKeydown,
 }) => {
   const [selectedKeys, setSelectedKeys] = useState([])
@@ -38,16 +40,18 @@ export const TodoTree: React.FC<TodoTreeProps> = ({
   }, [globalState.currentSelectKey])
 
   useEffect(() => {
-    if (!onKeydown) return
+    if (!onNodeKeydown) return
     const onKeydownHandle = (event: KeyboardEvent) => {
       const key = globalState.currentSelectKey
+      const code = keycode(event)
       if (key) {
         const node = findNode(getArray(treeData), key)
         if (node) {
           if (globalState.blockKeyboard) return
-          onKeydown(keycode(event), node, event)
+          onNodeKeydown(code, node, event)
         }
       }
+      onKeydown && onKeydown(code, event)
     }
     document.addEventListener('keydown', onKeydownHandle)
     return () => document.removeEventListener('keydown', onKeydownHandle)
@@ -73,7 +77,7 @@ export const TodoTree: React.FC<TodoTreeProps> = ({
       onRightClick={({ node }) => {
         setSelectedKeys([node.key])
       }}
-      onSelect={(keys) => {
+      onSelect={keys => {
         setSelectedKeys(keys)
         globalState.currentSelectKey = getArray(keys)[0]
       }}

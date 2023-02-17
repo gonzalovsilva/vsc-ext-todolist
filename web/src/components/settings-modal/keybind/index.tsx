@@ -20,6 +20,9 @@ export const Keybind: React.FC<KeybindProps> = ({}) => {
       <Descriptions.Item label={i18n.format('paste')}>
         Ctrl + v or Ctrl + V
       </Descriptions.Item>
+      <Descriptions.Item label={i18n.format('search_title')}>
+        Ctrl + f or Ctrl + F
+      </Descriptions.Item>
     </Descriptions>
   )
 }

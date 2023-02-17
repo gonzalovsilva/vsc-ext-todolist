@@ -84,6 +84,10 @@ export const localeMap = {
     versionDiff: 'Inconsistency with disk version detected',
     versionContinue: 'Overwrite',
     versionContinue2: 'Use Disk-Version',
+    search_title: 'search',
+    search_tip: 'search todo ...',
+    search_empty: 'No result',
+    search_count: 'find {count}',
   },
   'zh-cn': {
     removeItemTip: '确定删除此待办事项？',
@@ -168,5 +172,9 @@ export const localeMap = {
     versionDiff: '检测到和磁盘版本不一致',
     versionContinue: '覆盖更新',
     versionContinue2: '更新为磁盘版本',
+    search_title: '搜索',
+    search_tip: '搜索待办 ...',
+    search_empty: '无结果',
+    search_count: '共 {count} 项',
   },
 }

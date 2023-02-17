@@ -1,14 +1,11 @@
 import { Button, Dropdown, Menu, message } from 'antd'
 import React from 'react'
 
+import { copyer } from '@/utils/copyer'
 import MoreOutlined from '@ant-design/icons/MoreOutlined'
-import { callService } from '@saber2pr/vscode-webview'
 
-import { Services } from '../../../../src/api/type'
-import { KEY_TODO_TREE } from '../../../../src/constants'
 import { i18n } from '../../i18n'
 import { cloneTree, getArray, TreeNode } from '../../utils'
-import { copyer } from '@/utils/copyer'
 
 export interface ViewOptionsProps {
   tree: TreeNode[]
@@ -17,6 +14,7 @@ export interface ViewOptionsProps {
   onCollapseAll: VoidFunction
   onPaste: (tree: TreeNode[]) => any
   onSort: VoidFunction
+  onSearch: VoidFunction
 }
 
 export const ViewOptions: React.FC<ViewOptionsProps> = ({
@@ -25,6 +23,7 @@ export const ViewOptions: React.FC<ViewOptionsProps> = ({
   onUpdate,
   onPaste,
   onSort,
+  onSearch,
   tree,
 }) => {
   const menu = (
@@ -51,6 +50,7 @@ export const ViewOptions: React.FC<ViewOptionsProps> = ({
         {i18n.format('paste')}
       </Menu.Item>
       <Menu.Item onClick={onSort}>{i18n.format('sort')}</Menu.Item>
+      <Menu.Item onClick={onSearch}>{i18n.format('search_title')}</Menu.Item>
     </Menu>
   )
 

@@ -69,6 +69,7 @@ import {
   TreeNode,
   checkTreeSetTime,
   createTreeNode,
+  collectTreeNodes,
 } from '../../utils'
 import { parseUrlParam } from '../../utils/parseUrlParam'
 import { ScheduleLink } from './index.style'
@@ -76,6 +77,7 @@ import Markdown from 'react-markdown'
 import gfm from 'remark-gfm'
 import { EndTime } from '@/components/end-time'
 import { isNullOrUndefined } from '@/utils/is'
+import { useSearchBar } from '@/components/search-bar'
 
 const { Title } = Typography
 
@@ -104,6 +106,35 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
 
   const treeRef = useRef<TreeNode[]>([])
   const displayFileRef = useRef<string>(null)
+
+  const [searchTree, setSearchTree] = useState<TreeNode[]>(null)
+
+  const searchBarApi = useSearchBar({
+    onChange(value, isReg) {
+      let count = 0
+      if (value) {
+        const result = collectTreeNodes(getArray(treeRef.current), node => {
+          const content = node?.todo?.content
+          if (content) {
+            if (isReg) {
+              return new RegExp(value).test(content)
+            } else {
+              return content.includes(value)
+            }
+          }
+          return false
+        })
+        setSearchTree(result)
+        count = result.length
+      } else {
+        setSearchTree(null)
+      }
+      return count
+    },
+    onClose() {
+      setSearchTree(null)
+    },
+  })
 
   const treeSetTime = useMemo(
     () => checkTreeSetTime(getArray(treeRef.current)),
@@ -637,7 +668,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
                   treeRef.current = data
                   updateTree()
                 }}
-                onKeydown={(key, node, event) => {
+                onNodeKeydown={(key, node, event) => {
                   if (key === 'tab') {
                     createNewNode(node)
                   } else if (key === 'enter') {
@@ -646,17 +677,27 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
                     deleteNode(node)
                   } else {
                     const ctrl = event.ctrlKey || event.metaKey
-                    if (ctrl) {
-                      if (key === 'c' || key === 'C') {
+                    if (ctrl && key) {
+                      const kkey = key.toLowerCase()
+                      if (kkey === 'c') {
                         copyNode(node)
                       }
-                      if (key === 'v' || key === 'V') {
+                      if (kkey === 'v') {
                         pasteNode(node)
                       }
                     }
                   }
                 }}
-                treeData={treeRef.current}
+                onKeydown={(key, event) => {
+                  const ctrl = event.ctrlKey || event.metaKey
+                  if (ctrl && key) {
+                    const kkey = key.toLowerCase()
+                    if (kkey === 'f') {
+                      searchBarApi.showSearch()
+                    }
+                  }
+                }}
+                treeData={searchTree || treeRef.current}
                 itemOptions={null}
               />
             ) : loaded ? (
@@ -723,6 +764,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
                   updateExpandKeys(keys, 'replace')
                 }}
                 onPaste={pasteCopiedTree}
+                onSearch={() => searchBarApi.showSearch()}
               />
               <Button
                 type="text"
