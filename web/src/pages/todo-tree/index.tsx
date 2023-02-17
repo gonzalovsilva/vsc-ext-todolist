@@ -466,7 +466,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
       key: KEY_TODO_TREE,
       path: params?.file,
     })
-    const oldVersion = oldTodo.version
+    const oldVersion = oldTodo?.version
     const isSameVersion = isNullOrUndefined(oldVersion)
       ? true
       : oldVersion === version
