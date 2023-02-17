@@ -265,7 +265,8 @@ export const createTreeNode = (content = '', key = Date.now()) => {
 
 export const collectTreeNodes = (
   treeNode: TreeNode[],
-  filter: (node: TreeNode) => boolean
+  filter: (node: TreeNode) => boolean,
+  isChild: boolean
 ): TreeNode[] => {
   const result: TreeNode[] = []
   if (!(treeNode?.length > 0)) return result
@@ -275,7 +276,7 @@ export const collectTreeNodes = (
     if (filter(node)) {
       result.push({
         ...node,
-        children: [],
+        children: isChild ? node.children : [],
       })
     }
     stack.push(...node.children)

@@ -110,20 +110,24 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
   const [searchTree, setSearchTree] = useState<TreeNode[]>(null)
 
   const searchBarApi = useSearchBar({
-    onChange(value, isReg) {
+    onChange(value, isReg, isChild) {
       let count = 0
       if (value) {
-        const result = collectTreeNodes(getArray(treeRef.current), node => {
-          const content = node?.todo?.content
-          if (content) {
-            if (isReg) {
-              return new RegExp(value).test(content)
-            } else {
-              return content.includes(value)
+        const result = collectTreeNodes(
+          getArray(treeRef.current),
+          node => {
+            const content = node?.todo?.content
+            if (content) {
+              if (isReg) {
+                return new RegExp(value).test(content)
+              } else {
+                return content.includes(value)
+              }
             }
-          }
-          return false
-        })
+            return false
+          },
+          isChild
+        )
         setSearchTree(result)
         count = result.length
       } else {

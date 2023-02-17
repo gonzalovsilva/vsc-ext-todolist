@@ -88,6 +88,7 @@ export const localeMap = {
     search_tip: 'search todo ...',
     search_empty: 'No result',
     search_count: 'find {count}',
+    search_has_child: 'child',
   },
   'zh-cn': {
     removeItemTip: '确定删除此待办事项？',
@@ -176,5 +177,6 @@ export const localeMap = {
     search_tip: '搜索待办 ...',
     search_empty: '无结果',
     search_count: '共 {count} 项',
+    search_has_child: '子节点',
   },
 }
