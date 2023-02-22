@@ -1,7 +1,7 @@
 import { i18n } from '@/i18n'
 import { globalState } from '@/state'
 import { Checkbox, Input, notification, Space } from 'antd'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 export interface SearchBarProps {
   value: string
@@ -38,6 +38,8 @@ export interface UseSearchBarOps
 }
 
 export const useSearchBar = ({ onChange, onClose }: UseSearchBarOps) => {
+  const isShow = useRef(false)
+
   const Message = () => {
     const [value, setValue] = useState<string>()
     const [isReg, setIsReg] = useState<boolean>()
@@ -80,13 +82,20 @@ export const useSearchBar = ({ onChange, onClose }: UseSearchBarOps) => {
   }
 
   const showSearch = () => {
-    notification.info({
-      placement: 'topRight',
-      message: <Message />,
-      top: 8,
-      duration: null,
-      onClose: onClose,
-    })
+    if (isShow.current) {
+      notification.close('search-bar')
+      isShow.current = false
+    } else {
+      isShow.current = true
+      notification.info({
+        placement: 'topRight',
+        message: <Message />,
+        top: 8,
+        duration: null,
+        onClose: onClose,
+        key: 'search-bar',
+      })
+    }
   }
 
   return { showSearch }

@@ -16,7 +16,7 @@ import React, { useEffect, useState } from 'react'
 
 import { FormCheckbox } from '../'
 import { i18n } from '../../i18n'
-import { Keybind } from './keybind'
+import { defaultKeymap, Keybind } from './keybind'
 import { SetDisplayFile } from './set-display-file'
 
 const Link = Typography.Link
@@ -36,6 +36,8 @@ export interface SettingsProps {
   onPaste: (node: TreeNode[]) => void
   onLangChange(lang: 'zh-cn' | 'en'): void
   initValues?: FormValues
+  keymap: any
+  onKeymapChange(keymap: any): void
 }
 
 type FormValues = {
@@ -62,6 +64,8 @@ export const SettingsModal: React.FC<SettingsProps> = ({
   onPlay,
   onPaste,
   onLangChange,
+  keymap,
+  onKeymapChange,
 }) => {
   const [form] = Form.useForm()
 
@@ -79,12 +83,6 @@ export const SettingsModal: React.FC<SettingsProps> = ({
     initValues?.lang,
     initValues?.desc,
   ])
-
-  useEffect(() => {
-    form.setFieldsValue({
-      desc: initValues?.desc,
-    })
-  }, [initValues?.desc])
 
   return (
     <Modal
@@ -193,6 +191,7 @@ export const SettingsModal: React.FC<SettingsProps> = ({
                 <Input type="url" />
               </Form.Item>
             )}
+            <Form.Item hidden name="keymap" />
           </Collapse.Panel>
         </Collapse>
       </Form>
@@ -226,10 +225,11 @@ export const SettingsModal: React.FC<SettingsProps> = ({
           onClick={() =>
             Modal.confirm({
               title: i18n.format('keybind'),
-              width: 500,
-              content: <Keybind />,
+              width: 600,
+              content: <Keybind value={keymap} onChange={onKeymapChange} />,
               okText: i18n.format('confirm'),
-              cancelButtonProps: { hidden: true },
+              cancelText: i18n.format('reset'),
+              onCancel: () => onKeymapChange(defaultKeymap),
             })
           }
         >
@@ -253,6 +253,8 @@ export interface SettingsModalOps {
   onLangChange?(lang: 'zh-cn' | 'en'): void
   initValues: FormValues
   options: Options
+  keymap: any
+  onKeymapChange(keymap: any): void
 }
 
 export const useSettingsModal = (ops: SettingsModalOps) => {
@@ -262,6 +264,8 @@ export const useSettingsModal = (ops: SettingsModalOps) => {
       <SettingsModal
         onPaste={ops.onPaste}
         options={ops.options}
+        keymap={ops.keymap}
+        onKeymapChange={ops.onKeymapChange}
         onLangChange={ops.onLangChange}
         visible={visible}
         onCancel={() => {

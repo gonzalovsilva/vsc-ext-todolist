@@ -78,6 +78,8 @@ import gfm from 'remark-gfm'
 import { EndTime } from '@/components/end-time'
 import { isNullOrUndefined } from '@/utils/is'
 import { useSearchBar } from '@/components/search-bar'
+import { getShotKeyType } from '@/utils/getShotKey'
+import { defaultKeymap } from '@/components/settings-modal/keybind'
 
 const { Title } = Typography
 
@@ -171,6 +173,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
   const [lang, setLang] = useState<'zh-cn' | 'en'>('en')
   const [STORE_TITLE, setSTORE_TITLE] = useState<string>()
   const [version, setVersion] = useState<string>()
+  const [keymap, setKeymap] = useState<any>(defaultKeymap)
 
   // for hook message
   useEffect(() => {
@@ -215,6 +218,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
       setLang(val.lang || 'en')
       setDesc(val.desc)
       setVersion(val.version)
+      setKeymap(val.keymap)
       forceUpdate()
     }
     setLoaded(true)
@@ -504,6 +508,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
       showLine: showLine,
       playFontSize: playFontSize,
       webhook: webhook,
+      keymap,
       title: TITLE,
       autoSort,
       showEndTime,
@@ -551,6 +556,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
     showEndTime,
     playFontSize,
     webhook,
+    keymap,
     lang,
     desc,
   ])
@@ -576,6 +582,8 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
     options: {
       currentFile: params?.file,
     },
+    keymap,
+    onKeymapChange: setKeymap,
     initValues: {
       add_mode: addMode,
       virtual: virtualMode,
@@ -589,6 +597,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
       desc,
     },
     async onFinish(values) {
+      console.log('🚀 ~ file: index.tsx:597 ~ onFinish ~ values:', values)
       const isChangeDisplay = values?.displayFile !== displayFileRef.current
       if (isChangeDisplay && values?.displayFile) {
         await callService<Services, 'SetConfig'>('SetConfig', {
@@ -637,6 +646,20 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
     onLangChange,
   })
 
+  const keymapFucMap = {
+    newItem: (node: TreeNode) => createNewNode(node),
+    newItem_sibling: (node: TreeNode) => addSiblingNode(node),
+    delete: (node: TreeNode) => deleteNode(node),
+    copy: (node: TreeNode) => copyNode(node),
+    paste: (node: TreeNode) => pasteNode(node),
+    search_title: () => searchBarApi.showSearch(),
+    sort: async () => {
+      isMounted.current = false
+      await loadSource(sortTree)
+      message.success(i18n.format('sort_tip'))
+    },
+  }
+
   return (
     <div className="PageTodoList">
       <div className="layout">
@@ -663,6 +686,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
           >
             {todoTreeLength > 0 ? (
               <TodoTree
+                keymap={keymap}
                 showLine={showLine}
                 virtualMode={virtualMode}
                 titleRender={(node: TreeNode) => <Item node={node} />}
@@ -672,37 +696,13 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
                   treeRef.current = data
                   updateTree()
                 }}
-                onNodeKeydown={(key, node, event) => {
-                  if (key === 'tab') {
-                    createNewNode(node)
-                  } else if (key === 'enter') {
-                    addSiblingNode(node)
-                  } else if (key === 'backspace' || key === 'delete') {
-                    deleteNode(node)
-                  } else {
-                    const ctrl = event.ctrlKey || event.metaKey
-                    if (ctrl && key) {
-                      const kkey = key.toLowerCase()
-                      if (kkey === 'c') {
-                        copyNode(node)
-                      }
-                      if (kkey === 'v') {
-                        pasteNode(node)
-                      }
-                    }
-                  }
-                }}
-                onKeydown={(key, event) => {
-                  const ctrl = event.ctrlKey || event.metaKey
-                  if (ctrl && key) {
-                    const kkey = key.toLowerCase()
-                    if (kkey === 'f') {
-                      searchBarApi.showSearch()
-                    }
+                onHotKeydown={(shotType, node) => {
+                  const commandFunc = keymapFucMap[shotType]
+                  if (commandFunc) {
+                    commandFunc(node)
                   }
                 }}
                 treeData={searchTree || treeRef.current}
-                itemOptions={null}
               />
             ) : loaded ? (
               <Empty description={i18n.format('null')} />
@@ -755,11 +755,7 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
                   await loadSource()
                   message.success(i18n.format('updateTip'))
                 }}
-                onSort={async () => {
-                  isMounted.current = false
-                  await loadSource(sortTree)
-                  message.success(i18n.format('sort_tip'))
-                }}
+                onSort={keymapFucMap.sort}
                 onCollapseAll={() => {
                   updateExpandKeys([], 'replace')
                 }}

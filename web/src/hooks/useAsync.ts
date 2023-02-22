@@ -14,25 +14,25 @@ export type UseAsyncResult<A extends any[], T> = {
 }
 
 export function useAsync<A extends any[], T = any>(
+  run: (...args: A) => Promise<T>
+): UseAsyncResult<A, T>
+export function useAsync<A extends any[], T = any>(
   run: (...args: A) => Promise<T>,
+  deps: any[]
 ): UseAsyncResult<A, T>
 export function useAsync<A extends any[], T = any>(
   run: (...args: A) => Promise<T>,
   deps: any[],
-): UseAsyncResult<A, T>
-export function useAsync<A extends any[], T = any>(
-  run: (...args: A) => Promise<T>,
-  deps: any[],
-  ops: UseAsyncOps<T>,
+  ops: UseAsyncOps<T>
 ): UseAsyncResult<A, T>
 
 export function useAsync<A extends any[], T = any>(
   run: (...args: A) => Promise<T>,
   deps: any[] = [],
-  ops?: UseAsyncOps<T>,
+  ops?: UseAsyncOps<T>
 ): UseAsyncResult<A, T> {
   const [data, setData] = useState<T>()
-  const [loading, setLoading] = useState<boolean>()
+  const [loading, setLoading] = useState<boolean>(false)
 
   const main = async (...args: any) => {
     try {

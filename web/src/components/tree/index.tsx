@@ -1,12 +1,12 @@
 import Tree, { DataNode } from 'antd/lib/tree'
-import keycode from 'keycode'
 import React, { useEffect, useState } from 'react'
+import hotkey from 'hotkeys-js'
 
 import { globalState } from '@/state'
 
-import { OptionsBtnProps } from '../'
 import { Key } from '../../../../src/api/type'
 import { findNode, getArray, treeDrop, TreeNode } from '../../utils'
+import { defaultKeymap } from '../settings-modal/keybind'
 
 export interface TodoTreeProps {
   showLine?: boolean
@@ -16,10 +16,12 @@ export interface TodoTreeProps {
   onExpand: (keys: string[]) => void
   treeData: TreeNode[]
   handleDrop: (newTree: TreeNode[]) => void
-  itemOptions: OptionsBtnProps
-  onNodeKeydown?(key: string, node: TreeNode, event: KeyboardEvent): void
-  onKeydown?(key: string, event: KeyboardEvent): void
+  onHotKeydown?(funcType: string, node: TreeNode, event: KeyboardEvent): void
+  keymap: any
 }
+
+const parseHotEventName = (key: string) =>
+  Array.from(new Set(key.toLowerCase().replace(/ /g, '').split(','))).join(',')
 
 export const TodoTree: React.FC<TodoTreeProps> = ({
   showLine,
@@ -29,9 +31,8 @@ export const TodoTree: React.FC<TodoTreeProps> = ({
   onExpand,
   treeData,
   handleDrop,
-  itemOptions,
-  onNodeKeydown,
-  onKeydown,
+  onHotKeydown,
+  keymap,
 }) => {
   const [selectedKeys, setSelectedKeys] = useState([])
 
@@ -40,26 +41,37 @@ export const TodoTree: React.FC<TodoTreeProps> = ({
   }, [globalState.currentSelectKey])
 
   useEffect(() => {
-    if (!onNodeKeydown) return
-    const onKeydownHandle = (event: KeyboardEvent) => {
-      const key = globalState.currentSelectKey
-      const code = keycode(event)
-      if (key) {
-        const node = findNode(getArray(treeData), key)
-        if (node) {
+    if (!onHotKeydown) return
+
+    const keyMaps = Object.assign({}, defaultKeymap, keymap || {})
+
+    const listeners = []
+    const unlisteners = []
+
+    Object.keys(keyMaps).map(funcType => {
+      const hotkeyType = keyMaps[funcType]
+      const kotEventName = parseHotEventName(hotkeyType)
+      listeners.push(() => {
+        hotkey(kotEventName, event => {
+          const key = globalState.currentSelectKey
+          const node = findNode(getArray(treeData), key)
           if (globalState.blockKeyboard) return
-          onNodeKeydown(code, node, event)
-        }
-      }
-      onKeydown && onKeydown(code, event)
+          onHotKeydown(funcType, node, event)
+        })
+      })
+      unlisteners.push(() => hotkey.unbind(kotEventName))
+    })
+
+    listeners.forEach(l => l())
+    return () => {
+      unlisteners.forEach(l => l())
     }
-    document.addEventListener('keydown', onKeydownHandle)
-    return () => document.removeEventListener('keydown', onKeydownHandle)
   }, [
     treeData,
     selectedKeys,
     globalState.blockKeyboard,
     globalState.currentSelectKey,
+    keymap,
   ])
 
   return (

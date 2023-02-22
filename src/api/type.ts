@@ -16,6 +16,7 @@ export type IStoreTodoTree = {
   lang?: 'zh-cn' | 'en'
   desc?: string
   version?: string
+  keymap?: string
 }
 
 // service type define

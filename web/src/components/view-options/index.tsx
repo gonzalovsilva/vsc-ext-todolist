@@ -28,11 +28,13 @@ export const ViewOptions: React.FC<ViewOptionsProps> = ({
 }) => {
   const menu = (
     <Menu>
-      <Menu.Item onClick={onUpdate}>{i18n.format('update')}</Menu.Item>
-      <Menu.Item onClick={onCollapseAll}>
-        {i18n.format('collapseAll')}
-      </Menu.Item>
-      <Menu.Item onClick={onExpandAll}>{i18n.format('expandAll')}</Menu.Item>
+      <Menu.SubMenu title={i18n.format('viewOps')}>
+        <Menu.Item onClick={onUpdate}>{i18n.format('update')}</Menu.Item>
+        <Menu.Item onClick={onCollapseAll}>
+          {i18n.format('collapseAll')}
+        </Menu.Item>
+        <Menu.Item onClick={onExpandAll}>{i18n.format('expandAll')}</Menu.Item>
+      </Menu.SubMenu>
       <Menu.Item
         onClick={async () => {
           copyer.copyTree(getArray(tree))
@@ -49,8 +51,8 @@ export const ViewOptions: React.FC<ViewOptionsProps> = ({
       >
         {i18n.format('paste')}
       </Menu.Item>
-      <Menu.Item onClick={onSort}>{i18n.format('sort')}</Menu.Item>
       <Menu.Item onClick={onSearch}>{i18n.format('search_title')}</Menu.Item>
+      <Menu.Item onClick={onSort}>{i18n.format('sort')}</Menu.Item>
     </Menu>
   )
 
