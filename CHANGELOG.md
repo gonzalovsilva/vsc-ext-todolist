@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.29](https://github.com/Saber2pr/vsc-ext-todolist/compare/v0.2.28...v0.2.29) (2023-02-24)
+
+
+### Bug Fixes
+
+* keyboard shotcut cache ([a64c702](https://github.com/Saber2pr/vsc-ext-todolist/commit/a64c70200a9a1a3da9b386d5925c71427819175f))
+
 ### [0.2.28](https://github.com/Saber2pr/vsc-ext-todolist/compare/v0.2.27...v0.2.28) (2023-02-24)
 
 ### [0.2.27](https://github.com/Saber2pr/vsc-ext-todolist/compare/v0.2.26...v0.2.27) (2023-02-24)
