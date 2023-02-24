@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.26](https://github.com/Saber2pr/vsc-ext-todolist/compare/v0.2.25...v0.2.26) (2023-02-24)
+
+
+### Features
+
+* custom shotcuts keyboard ([e8c9bec](https://github.com/Saber2pr/vsc-ext-todolist/commit/e8c9bec4c164c9e7a19b9ec37beb6db4e217acfe))
+
 ### [0.2.25](https://github.com/Saber2pr/vsc-ext-todolist/compare/v0.2.24...v0.2.25) (2023-02-17)
 
 
