@@ -16,6 +16,7 @@ import React, { useEffect, useState } from 'react'
 
 import { FormCheckbox } from '../'
 import { i18n } from '../../i18n'
+import { ButtonInput } from '../button-input'
 import { defaultKeymap, Keybind } from './keybind'
 import { SetDisplayFile } from './set-display-file'
 
@@ -176,11 +177,16 @@ export const SettingsModal: React.FC<SettingsProps> = ({
               name="playFontSize"
               tooltip={i18n.format('play_size_tip')}
             >
-              <Input
+              <ButtonInput
                 type="number"
                 style={{ width: '100px' }}
                 min={12}
                 addonAfter="px"
+                buttonProps={{
+                  type: 'text',
+                  onClick: onPlay,
+                  children: i18n.format('play'),
+                }}
               />
             </Form.Item>
             {isInVscode && (
@@ -232,9 +238,12 @@ export const SettingsModal: React.FC<SettingsProps> = ({
         >
           {i18n.format('keybind')}
         </Button>
-        <Button type="text" onClick={onPlay}>
-          {i18n.format('play')}
-        </Button>
+        <a
+          className="ant-btn ant-btn-text"
+          href="https://github.com/Saber2pr/vsc-ext-todolist/issues/new/choose"
+        >
+          {i18n.format('feedback')}
+        </a>
       </Space>
     </Modal>
   )

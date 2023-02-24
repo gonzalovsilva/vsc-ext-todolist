@@ -90,6 +90,7 @@ export const localeMap = {
     search_count: 'find {count}',
     search_has_child: 'child',
     reset: 'Reset',
+    feedback: 'Feedback',
   },
   'zh-cn': {
     removeItemTip: '确定删除此待办事项？',
@@ -180,5 +181,6 @@ export const localeMap = {
     search_count: '共 {count} 项',
     search_has_child: '子节点',
     reset: '重置',
+    feedback: '反馈',
   },
 }
