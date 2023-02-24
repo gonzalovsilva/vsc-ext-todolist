@@ -1,4 +1,12 @@
-import { Descriptions, Input, Space, Typography } from 'antd'
+import {
+  Button,
+  Descriptions,
+  Input,
+  Modal,
+  Popconfirm,
+  Space,
+  Typography,
+} from 'antd'
 import React, { useState } from 'react'
 
 import { useModal } from '@/hooks/useModal'
@@ -91,13 +99,31 @@ export const useKeybindModel = ({
   const api = useModal({
     title: i18n.format('keybind'),
     width: 600,
-    content: <Keybind value={keymap} onChange={onKeymapChange} />,
-    okText: i18n.format('confirm'),
-    cancelText: i18n.format('reset'),
-    onCancel: async () => {
-      onKeymapChange(defaultKeymap)
-      api.setVisible(false)
-    },
+    content: (
+      <Keybind
+        key={JSON.stringify(keymap)}
+        value={keymap}
+        onChange={onKeymapChange}
+      />
+    ),
+    okButtonProps: { hidden: true },
+    cancelButtonProps: { hidden: true },
+    footer: (
+      <Space>
+        <Popconfirm
+          title={i18n.format('reset_tip')}
+          onConfirm={() => {
+            onKeymapChange(defaultKeymap)
+            api.setVisible(false)
+          }}
+        >
+          <Button>{i18n.format('reset')}</Button>
+        </Popconfirm>
+        <Button onClick={() => api.setVisible(false)}>
+          {i18n.format('confirm')}
+        </Button>
+      </Space>
+    ),
   })
   return api
 }

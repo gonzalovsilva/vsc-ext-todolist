@@ -90,6 +90,7 @@ export const localeMap = {
     search_count: 'find {count}',
     search_has_child: 'child',
     reset: 'Reset',
+    reset_tip: 'Restore the shortcut keys to initial settings',
     feedback: 'Feedback',
   },
   'zh-cn': {
@@ -181,6 +182,7 @@ export const localeMap = {
     search_count: '共 {count} 项',
     search_has_child: '子节点',
     reset: '重置',
+    reset_tip: '恢复快捷键为初始设置',
     feedback: '反馈',
   },
 }
