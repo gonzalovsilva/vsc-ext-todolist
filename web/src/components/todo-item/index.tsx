@@ -77,34 +77,38 @@ export const TodoItem: React.FC<TodoItemProps> = ({
       const isUrlLink = /^http/.test(todo.link)
       if (isUrlLink) {
         content = (
-          <a
-            href={todo.link}
-            onClick={() => {
-              if (!isInVscode) {
-                window.open(todo.link, '_blank')
-              }
-            }}
-          >
-            {todo.content}
-            {LinkIcon}
-            {Tip}
+          <>
+            <a
+              href={todo.link}
+              onClick={() => {
+                if (!isInVscode) {
+                  window.open(todo.link, '_blank')
+                }
+              }}
+            >
+              {todo.content}
+              {LinkIcon}
+              {Tip}
+            </a>
             {Copy}
-          </a>
+          </>
         )
       } else {
         content = (
-          <a
-            onClick={() =>
-              callService<Services, 'OpenFile'>('OpenFile', {
-                path: todo.link,
-              })
-            }
-          >
-            {todo.content}
-            {LinkIcon}
-            {Tip}
+          <>
+            <a
+              onClick={() =>
+                callService<Services, 'OpenFile'>('OpenFile', {
+                  path: todo.link,
+                })
+              }
+            >
+              {todo.content}
+              {LinkIcon}
+              {Tip}
+            </a>
             {Copy}
-          </a>
+          </>
         )
       }
     }
