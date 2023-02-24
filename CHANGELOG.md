@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.27](https://github.com/Saber2pr/vsc-ext-todolist/compare/v0.2.26...v0.2.27) (2023-02-24)
+
+
+### Features
+
+* feedback ([40c96d4](https://github.com/Saber2pr/vsc-ext-todolist/commit/40c96d4eac0a36570c7eb4dcee6ba66143a4dcb0))
+
 ### [0.2.26](https://github.com/Saber2pr/vsc-ext-todolist/compare/v0.2.25...v0.2.26) (2023-02-24)
 
 
