@@ -1,6 +1,7 @@
 import { Descriptions, Input, Space, Typography } from 'antd'
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 
+import { useModal } from '@/hooks/useModal'
 import { CheckOutlined, EditOutlined } from '@ant-design/icons'
 
 import { i18n } from '../../../i18n'
@@ -21,10 +22,7 @@ export const defaultKeymap = {
 }
 
 export const Keybind: React.FC<KeybindProps> = ({ value, onChange }) => {
-  const keymap = useMemo(
-    () => Object.assign({}, defaultKeymap, value || {}),
-    [value]
-  )
+  const keymap = Object.assign({}, defaultKeymap, value || {})
 
   return (
     <Descriptions bordered column={1}>
@@ -79,4 +77,27 @@ const KeyItem: React.FC<{ value: string; onChange: (val: string) => void }> = ({
       )}
     </Space>
   )
+}
+
+export interface UseKeybindModelOps {
+  keymap: any
+  onKeymapChange(value: any): void
+}
+
+export const useKeybindModel = ({
+  keymap,
+  onKeymapChange,
+}: UseKeybindModelOps) => {
+  const api = useModal({
+    title: i18n.format('keybind'),
+    width: 600,
+    content: <Keybind value={keymap} onChange={onKeymapChange} />,
+    okText: i18n.format('confirm'),
+    cancelText: i18n.format('reset'),
+    onCancel: async () => {
+      onKeymapChange(defaultKeymap)
+      api.setVisible(false)
+    },
+  })
+  return api
 }

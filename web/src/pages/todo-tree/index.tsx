@@ -597,7 +597,6 @@ export const PageTodoTree: React.FC<PageTodoTreeProps> = ({ onLangChange }) => {
       desc,
     },
     async onFinish(values) {
-      console.log('🚀 ~ file: index.tsx:597 ~ onFinish ~ values:', values)
       const isChangeDisplay = values?.displayFile !== displayFileRef.current
       if (isChangeDisplay && values?.displayFile) {
         await callService<Services, 'SetConfig'>('SetConfig', {

@@ -1,5 +1,3 @@
-import { isTreeNodeJson, TreeNode } from '@/utils'
-import { isInVscode } from '@saber2pr/vscode-webview'
 import {
   Button,
   Collapse,
@@ -14,10 +12,13 @@ import {
 } from 'antd'
 import React, { useEffect, useState } from 'react'
 
+import { isTreeNodeJson, TreeNode } from '@/utils'
+import { isInVscode } from '@saber2pr/vscode-webview'
+
 import { FormCheckbox } from '../'
 import { i18n } from '../../i18n'
 import { ButtonInput } from '../button-input'
-import { defaultKeymap, Keybind } from './keybind'
+import { useKeybindModel } from './keybind'
 import { SetDisplayFile } from './set-display-file'
 
 const Link = Typography.Link
@@ -69,6 +70,10 @@ export const SettingsModal: React.FC<SettingsProps> = ({
   onKeymapChange,
 }) => {
   const [form] = Form.useForm()
+  const KeybindModelApi = useKeybindModel({
+    keymap,
+    onKeymapChange,
+  })
 
   useEffect(() => {
     form.resetFields()
@@ -223,19 +228,7 @@ export const SettingsModal: React.FC<SettingsProps> = ({
         <Button type="text" onClick={onParseMd}>
           {i18n.format('parsemd')}
         </Button>
-        <Button
-          type="text"
-          onClick={() =>
-            Modal.confirm({
-              title: i18n.format('keybind'),
-              width: 600,
-              content: <Keybind value={keymap} onChange={onKeymapChange} />,
-              okText: i18n.format('confirm'),
-              cancelText: i18n.format('reset'),
-              onCancel: () => onKeymapChange(defaultKeymap),
-            })
-          }
-        >
+        <Button type="text" onClick={() => KeybindModelApi.setVisible(true)}>
           {i18n.format('keybind')}
         </Button>
         <a
@@ -245,6 +238,7 @@ export const SettingsModal: React.FC<SettingsProps> = ({
           {i18n.format('feedback')}
         </a>
       </Space>
+      {KeybindModelApi.modal}
     </Modal>
   )
 }
