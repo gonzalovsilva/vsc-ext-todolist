@@ -13,6 +13,9 @@
 		"Notebooks",
 		"Visualization"
 	],
+	"sponsor": {
+		"url": "https://opencollective.com/vsc-ext-todolist"
+	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/Saber2pr/vsc-ext-todolist.git"
