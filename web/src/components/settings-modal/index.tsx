@@ -20,6 +20,7 @@ import { i18n } from '../../i18n'
 import { ButtonInput } from '../button-input'
 import { useKeybindModel } from './keybind'
 import { SetDisplayFile } from './set-display-file'
+import { Heart } from './icon'
 
 const Link = Typography.Link
 
@@ -182,16 +183,11 @@ export const SettingsModal: React.FC<SettingsProps> = ({
               name="playFontSize"
               tooltip={i18n.format('play_size_tip')}
             >
-              <ButtonInput
+              <Input
                 type="number"
                 style={{ width: '100px' }}
                 min={12}
                 addonAfter="px"
-                buttonProps={{
-                  type: 'text',
-                  onClick: onPlay,
-                  children: i18n.format('play'),
-                }}
               />
             </Form.Item>
             {isInVscode && (
@@ -200,11 +196,26 @@ export const SettingsModal: React.FC<SettingsProps> = ({
               </Form.Item>
             )}
             <Form.Item hidden name="keymap" />
+            <Divider style={{ marginBottom: 16 }} />
+            <Space
+              split={<Divider type="vertical" style={{ margin: '0 4px' }} />}
+              style={{ flexWrap: 'wrap' }}
+            >
+              <Button type="text" onClick={onSaveAs}>
+                {i18n.format('save_as')}
+              </Button>
+              <Button type="text" onClick={onPlay}>
+                {i18n.format('play')}
+              </Button>
+            </Space>
           </Collapse.Panel>
         </Collapse>
       </Form>
       <Divider>{i18n.format('more_options')}</Divider>
-      <Space split={<Divider type="vertical" />} style={{ flexWrap: 'wrap' }}>
+      <Space
+        split={<Divider type="vertical" style={{ margin: '0 2px' }} />}
+        style={{ flexWrap: 'wrap' }}
+      >
         {isInVscode || (
           <Upload
             beforeUpload={() => false}
@@ -222,9 +233,6 @@ export const SettingsModal: React.FC<SettingsProps> = ({
             <Button type="text">{i18n.format('import')}</Button>
           </Upload>
         )}
-        <Button type="text" onClick={onSaveAs}>
-          {i18n.format('save_as')}
-        </Button>
         <Button type="text" onClick={onParseMd}>
           {i18n.format('parsemd')}
         </Button>
@@ -236,6 +244,13 @@ export const SettingsModal: React.FC<SettingsProps> = ({
           href="https://github.com/Saber2pr/vsc-ext-todolist/issues/new/choose"
         >
           {i18n.format('feedback')}
+        </a>
+        <a
+          className="ant-btn ant-btn-text flex align-items-center"
+          href="https://opencollective.com/vsc-ext-todolist"
+          style={{ display: 'flex', paddingBottom: 0 }}
+        >
+          <Heart /> {i18n.format('sponsor')}
         </a>
       </Space>
       {KeybindModelApi.modal}

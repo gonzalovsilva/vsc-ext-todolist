@@ -92,6 +92,7 @@ export const localeMap = {
     reset: 'Reset',
     reset_tip: 'Restore the shortcut keys to initial settings',
     feedback: 'Feedback',
+    sponsor: 'Sponsor',
   },
   'zh-cn': {
     removeItemTip: '确定删除此待办事项？',
@@ -184,5 +185,6 @@ export const localeMap = {
     reset: '重置',
     reset_tip: '恢复快捷键为初始设置',
     feedback: '反馈',
+    sponsor: '赞助',
   },
 }
